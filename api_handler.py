@@ -1,8 +1,8 @@
 import requests
 import base64
 import ast
-from typing import Union, Tuple
 import time
+from typing import Tuple
 
 endpoints = {
     "create_invitation": "/connections/create-invitation",
@@ -79,7 +79,7 @@ if __name__ == "__main__":
         time.sleep(1)
     print("Connection state is active")
     # Create schema
-    test_schema_id = desktop.create_schema(schema_name="Test schema", attributes=["score", "high_score"])
+    test_schema_id = desktop.create_schema(schema_name="schema 1", attributes=["score"]) 
     print(f"Schema created id: {test_schema_id}")
     # Create cred definition with test schema id
     credential_id = desktop.create_credential_definition(schema_id=test_schema_id, schema_tag="test_cred10")
