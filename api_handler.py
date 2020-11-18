@@ -31,7 +31,8 @@ class ApiHandler:
         response = requests.post(
             f"{self.__api_url}{endpoints['create_invitation']}", params=params).json()
         # Return the connection id and decoded invitation url
-        return response["connection_id"], ast.literal_eval(base64.b64decode(response["invitation_url"].split("c_i=")[1]).decode('utf-8'))
+        return response["connection_id"], ast.literal_eval(
+            base64.b64decode(response["invitation_url"].split("c_i=")[1]).decode('utf-8'))
 
     def receive_invitation(self, invitation_url: dict, alias: str, auto_accept: bool) -> str:
         params = {"alias": alias,
@@ -45,7 +46,7 @@ class ApiHandler:
             f"{self.__api_url}/connections/{connection_id}").json()
         return states[response["state"]]
 
-    def create_schema(self, schema_name: str, attributes: list) -> str:
+    def create_schema(self, schema_name: str, attributes: list) -> dict:
         schema = {
             "attributes": attributes,
             "schema_name": schema_name,
@@ -71,12 +72,12 @@ class ApiHandler:
         return response.json()["credential_definition_id"]
 
     def create_issue_credential(self, conn_id: str, cred_def_id: str, attributes: list, schema):
-        #TODO: SEND DID THE NORMAL WAY 
+        # TODO: SEND DID THE NORMAL WAY
         did = cred_def_id.split(":")[0]
         credential = {
             "auto_remove": "true",
             "comment": "string",
-            #"connection_id": conn_id,
+            # "connection_id": conn_id,
             "cred_def_id": cred_def_id,
             "credential_proposal": {
                 "@type": "issue-credential/1.0/credential-preview",
@@ -98,7 +99,7 @@ if __name__ == "__main__":
     mobile = ApiHandler("localhost", 7003)
     desktop = ApiHandler("localhost", 7001)
 
-    # Create a auto-a[ccept invitation on the mobile ACA-PY
+    # Create a auto-accept invitation on the mobile ACA-PY
     conn_id, invitation = mobile.create_invitation(
         alias="Desktop_conn", multi_use=False, auto_accept=True)
 
@@ -121,11 +122,9 @@ if __name__ == "__main__":
     cred_def_id = desktop.create_credential_definition(
         schema_id=schema["id"], schema_tag="test_cred10")
     print(f"Credential id: {cred_def_id}")
-    
-    # create an ?issueable? credential
-    credential = desktop.create_issue_credential(conn_id=conn_id, cred_def_id=cred_def_id, attributes=[ { "mime-type": "text/plain", "name": "score", "value": "12" }, { "mime-type": "text/plain", "name": "high_score", "value": "30" }], schema=schema)
-    print(f"Credential exhange id: {credential['credential_exchange_id']}")
 
-
-
-
+    # create an ?issuable? credential
+    credential = desktop.create_issue_credential(conn_id=conn_id, cred_def_id=cred_def_id, attributes=[
+        {"mime-type": "text/plain", "name": "score", "value": "12"},
+        {"mime-type": "text/plain", "name": "high_score", "value": "30"}], schema=schema)
+    print(f"Credential exchange id: {credential['credential_exchange_id']}")
