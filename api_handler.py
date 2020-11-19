@@ -9,7 +9,8 @@ endpoints = {
     "receive_invitation": "/connections/receive-invitation",
     "issue_credential": "/issue-credential/send",
     "create_registry": "/revocation/create-registry",
-    "get_credentials": "/credentials"
+    "get_credentials": "/credentials",
+    "send_proposal": "/present-proof/send-proposal"
 }
 
 states = {
@@ -18,9 +19,9 @@ states = {
     "invitation": 2
 }
 
-version = "0"
-schema_name = "schema_name " + version
-schema_tag = "schema_tag " + version
+version = "_v3.0"
+schema_name = "schema_name" + version
+schema_tag = "schema_tag" + version
 
 
 class ApiHandler:
@@ -113,6 +114,21 @@ class ApiHandler:
     def get_credentials(self) -> dict:
         return requests.get(f"{self.__api_url}{endpoints['get_credentials']}").json()
 
+    def send_proposal(self, conn_id: str, attributes: list, predicates: list):
+        proposal = {
+                "auto_present": "true",
+                "comment": "Hallo, dit is een proposal",
+                "connection_id": conn_id,
+                "presentation_proposal": {
+                    "@type": "https://didcomm.org/present-proof/1.0/presentation-preview",
+                    "attributes": attributes,
+                    "predicates": predicates
+                },
+                "trace": "false"
+        }
+        response = requests.post(f"{self.__api_url}{endpoints['send_proposal']}", json=proposal)
+        return response.json()['presentation_exchange_id']
+
 
 if __name__ == "__main__":
     # Create handler instances for both mobile and desktop
@@ -144,7 +160,7 @@ if __name__ == "__main__":
         attributes=["score", "high_score"]
     )
     print(f"Schema id: {schema['id']}")
-
+    print("Creating credential definition, please have patients...")
     # Create cred definition with test schema id
     cred_def_id = desktop.create_credential_definition(
         schema_id=schema["id"],
@@ -156,7 +172,7 @@ if __name__ == "__main__":
     # Create a revocation registry for the given credential definition id
     desktop.create_revocation_registry(cred_def_id=cred_def_id)
 
-    # create an ?issuable? credential
+    # Create an ?issuable? credential
     credential = desktop.send_issue_credential(
         conn_id=desktop_conn_id,
         cred_def_id=cred_def_id,
@@ -167,6 +183,16 @@ if __name__ == "__main__":
     )
     print(f"Credential exchange id: {credential['credential_exchange_id']}")
 
+    # Wait a couple of seconds to let the mobile agent actually receive and process the credential
+    time.sleep(2)
     # Get credentials om mobile agent
     credentials = mobile.get_credentials()
-    print(f"credential: {credentials['results'][0]['attrs']}")
+    print(f"There are {len(credentials['results'])} credential(s)\nfirst entry: {credentials['results'][0]['attrs']}")
+
+    # TODO: Send proposal request
+    pres_ex_id = desktop.send_proposal(
+        conn_id=desktop_conn_id,
+        attributes=[{"name": "score"}],
+        predicates=[{"name": "high_score", "predicate": ">=", "threshold": 250}]
+    )
+    print(f"Presentation exchange id: {pres_ex_id}")
