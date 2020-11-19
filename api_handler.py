@@ -1,7 +1,6 @@
 import requests
 import base64
 import ast
-import time
 from typing import Tuple
 
 endpoints = {
@@ -10,7 +9,8 @@ endpoints = {
     "issue_credential": "/issue-credential/send",
     "create_registry": "/revocation/create-registry",
     "get_credentials": "/credentials",
-    "send_proposal": "/present-proof/send-proposal"
+    "send_proposal": "/present-proof/send-request",
+    "base_proof": "/present-proof/records",
 }
 
 states = {
@@ -18,10 +18,6 @@ states = {
     "active": 1,
     "invitation": 2
 }
-
-version = "_v3.0"
-schema_name = "schema_name" + version
-schema_tag = "schema_tag" + version
 
 
 class ApiHandler:
@@ -114,85 +110,34 @@ class ApiHandler:
     def get_credentials(self) -> dict:
         return requests.get(f"{self.__api_url}{endpoints['get_credentials']}").json()
 
-    def send_proposal(self, conn_id: str, attributes: list, predicates: list):
+    def send_proof_request(self, conn_id: str, attributes: dict, predicates: dict) -> str:
         proposal = {
-                "auto_present": "true",
-                "comment": "Hallo, dit is een proposal",
+                "comment": "Ik wil proof",
                 "connection_id": conn_id,
-                "presentation_proposal": {
-                    "@type": "https://didcomm.org/present-proof/1.0/presentation-preview",
-                    "attributes": attributes,
-                    "predicates": predicates
+                "proof_request": {
+                    "name": "Het AIVD wil je locatie weten",
+                    "requested_attributes": attributes,
+                    "requested_predicates": predicates,
+                    "version": "1.0"
                 },
                 "trace": "false"
         }
-        response = requests.post(f"{self.__api_url}{endpoints['send_proposal']}", json=proposal)
-        return response.json()['presentation_exchange_id']
+        return requests.post(f"{self.__api_url}{endpoints['send_proposal']}",
+                             json=proposal).json()['presentation_exchange_id']
+
+    def get_pres_exchange_id(self):
+        return requests.get(
+            f"{self.__api_url}{endpoints['base_proof']}").json()['results'][0]['presentation_exchange_id']
+
+    def send_presentation(self, pres_ex_id: str, requested_attributes: dict, requested_predicates: dict) -> dict:
+        presentation = {
+            "requested_attributes": requested_attributes,
+            "requested_predicates": requested_predicates,
+            "self_attested_attributes": {},
+            "trace": "false",
+        }
+        response = requests.post(f"{self.__api_url}{endpoints['base_proof']}/{pres_ex_id}/send-presentation", json=presentation)
+        print(response.text)
+        return response.json()
 
 
-if __name__ == "__main__":
-    # Create handler instances for both mobile and desktop
-    mobile = ApiHandler("localhost", 7003)
-    desktop = ApiHandler("localhost", 7001)
-
-    # Create a auto-accept invitation on the mobile ACA-PY
-    mobile_conn_id, invitation = mobile.create_invitation(
-        alias="Desktop_conn",
-        multi_use=False,
-        auto_accept=True
-    )
-
-    # receive and auto accept the invitation on the desktop
-    desktop_conn_id = desktop.receive_invitation(
-        invitation_url=invitation,
-        alias="Mobile_conn", auto_accept=True
-    )
-
-    # Check the connection state
-    while desktop.get_connection_state(desktop_conn_id) != states["active"]:
-        print("Connection state is not active...")
-        time.sleep(1)
-    print("Connection state is active")
-
-    # Create schema
-    schema = desktop.create_schema(
-        schema_name=schema_name,
-        attributes=["score", "high_score"]
-    )
-    print(f"Schema id: {schema['id']}")
-    print("Creating credential definition, please have patients...")
-    # Create cred definition with test schema id
-    cred_def_id = desktop.create_credential_definition(
-        schema_id=schema["id"],
-        schema_tag=schema_tag,
-        support_revocation=False
-    )
-    print(f"Credential def id: {cred_def_id}")
-
-    # Create a revocation registry for the given credential definition id
-    desktop.create_revocation_registry(cred_def_id=cred_def_id)
-
-    # Create an ?issuable? credential
-    credential = desktop.send_issue_credential(
-        conn_id=desktop_conn_id,
-        cred_def_id=cred_def_id,
-        attributes=[
-            {"mime-type": "text/plain", "name": "score", "value": "12"},
-            {"mime-type": "text/plain", "name": "high_score", "value": "300"}],
-        schema=schema
-    )
-    print(f"Credential exchange id: {credential['credential_exchange_id']}")
-
-    # Wait a couple of seconds to let the mobile agent actually receive and process the credential
-    time.sleep(2)
-    # Get credentials om mobile agent
-    credentials = mobile.get_credentials()
-    print(f"There are {len(credentials['results'])} credential(s)\nfirst entry: {credentials['results'][0]['attrs']}")
-
-    # TODO: Send proposal request
-    pres_ex_id = desktop.send_proposal(
-        conn_id=desktop_conn_id,
-        attributes=[{"name": "score"}],
-        predicates=[{"name": "high_score", "predicate": ">=", "threshold": 250}]
-    )
-    print(f"Presentation exchange id: {pres_ex_id}")
