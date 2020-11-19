@@ -1,13 +1,12 @@
 # MNNU-Desktop
 
-
-
-1. Revocation van een credential -> EN GOED TESTEN HOOR
-2. Credential versturen naar de mobile agent -> verifieren
-2.5 Present-proof van dokter naar mobiel aanvragen
-3. present-proof van mobile naar dokter -> OOK GOED TESTEN
-4. Optionele waardes in credentials
-5. Credentials overschrijven
-6. Presen-proof delen van een credential vragen
-7. auto-accept dingen uitzetten
-8. alle requests handmatig accepteren
+- [x] Revocation van een credential (gewoon weggehaald voor nu niet gefixed)
+- [x] Credential versturen naar de mobile agent
+- [ ] Present-proof van dokter naar mobiel aanvragen
+- [ ] present-proof van mobile naar dokter
+- [ ] Optionele waardes in credential
+- [ ] Credentials overschrijven
+- [ ] Presen-proof delen van een credential vragen
+- [ ] auto-accept dingen uitzetten
+- [ ] alle requests handmatig accepteren
+- [ ] webhook relay

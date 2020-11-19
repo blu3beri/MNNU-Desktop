@@ -8,7 +8,8 @@ endpoints = {
     "create_invitation": "/connections/create-invitation",
     "receive_invitation": "/connections/receive-invitation",
     "issue_credential": "/issue-credential/send",
-    "create_registry": "/revocation/create-registry"
+    "create_registry": "/revocation/create-registry",
+    "get_credentials": "/credentials"
 }
 
 states = {
@@ -17,6 +18,9 @@ states = {
     "invitation": 2
 }
 
+version = "0"
+schema_name = "schema_name " + version
+schema_tag = "schema_tag " + version
 
 class ApiHandler:
     def __init__(self, api_url: str, port: int):
@@ -58,11 +62,12 @@ class ApiHandler:
 
     def create_credential_definition(self, schema_id: str, schema_tag: str, support_revocation: bool = True) -> str:
         cred_def = {
-            "revocation_registry_size": 1000,
             "schema_id": schema_id,
-            "support_revocation": self.format_bool(support_revocation),
-            "tag": schema_tag
+            "tag": schema_tag,
         }
+        if support_revocation:
+            cred_def["revocation_registry_size"] = 1000
+            cred_def["support_revocation"] = "true"
         response = requests.post(
             f"{self.__api_url}/credential-definitions", json=cred_def, timeout=60)
         # retry creating credential definition if response code is not 200
@@ -81,7 +86,6 @@ class ApiHandler:
         return None
 
     def send_issue_credential(self, conn_id: str, cred_def_id: str, attributes: list, schema):
-        # TODO: SEND DID THE NORMAL WAY
         did = cred_def_id.split(":")[0]
         credential = {
             "auto_remove": "true",
@@ -99,8 +103,10 @@ class ApiHandler:
             "schema_version": schema["version"],
             "trace": "false"
         }
-        response = requests.post(f"{self.__api_url}{endpoints['issue_credential']}", json=credential)
-        return response.json()
+        return requests.post(f"{self.__api_url}{endpoints['issue_credential']}", json=credential).json()
+
+    def get_credentials(self) -> dict:
+        return requests.get(f"{self.__api_url}{endpoints['get_credentials']}").json()
 
 
 if __name__ == "__main__":
@@ -124,19 +130,23 @@ if __name__ == "__main__":
 
     # Create schema
     schema = desktop.create_schema(
-        schema_name="schema 4", attributes=["score", "high_score"])
+        schema_name=schema_name, attributes=["score", "high_score"])
     print(f"Schema id: {schema['id']}")
 
     # Create cred definition with test schema id
     cred_def_id = desktop.create_credential_definition(
-        schema_id=schema["id"], schema_tag="test_cred4", support_revocation=False)
+        schema_id=schema["id"], schema_tag=schema_tag, support_revocation=False)
     print(f"Credential def id: {cred_def_id}")
 
     # Create a revocatio registry for the given credential definition id
-    # desktop.create_revocation_registry(cred_def_id=cred_def_id)
+    desktop.create_revocation_registry(cred_def_id=cred_def_id)
 
     # create an ?issuable? credential
     credential = desktop.send_issue_credential(conn_id=desktop_conn_id, cred_def_id=cred_def_id, attributes=[
         {"mime-type": "text/plain", "name": "score", "value": "12"},
-        {"mime-type": "text/plain", "name": "high_score", "value": "30"}], schema=schema)
+        {"mime-type": "text/plain", "name": "high_score", "value": "300"}], schema=schema)
     print(f"Credential exchange id: {credential['credential_exchange_id']}")
+    
+    # Get credentials om mobile agent
+    credentials = mobile.get_credentials()
+    print(f"credential: {credentials['results'][0]['attrs']}")
