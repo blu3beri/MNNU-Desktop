@@ -22,6 +22,7 @@ version = "0"
 schema_name = "schema_name " + version
 schema_tag = "schema_tag " + version
 
+
 class ApiHandler:
     def __init__(self, api_url: str, port: int):
         self.__api_url = f"http://{api_url}:{port}"
@@ -31,25 +32,29 @@ class ApiHandler:
         return str(x).lower() if isinstance(x, bool) else x
 
     def create_invitation(self, alias: str, multi_use: bool, auto_accept: bool) -> Tuple[str, dict]:
-        params = {"alias": alias,
-                  "auto_accept": f"{self.format_bool(auto_accept)}", "multi_use": f"{self.format_bool(multi_use)}"}
+        params = {
+            "alias": alias,
+            "auto_accept": f"{self.format_bool(auto_accept)}",
+            "multi_use": f"{self.format_bool(multi_use)}"
+        }
         response = requests.post(
             f"{self.__api_url}{endpoints['create_invitation']}", params=params).json()
         # Return the connection id and decoded invitation url
-        return response["connection_id"], ast.literal_eval(
-            base64.b64decode(response["invitation_url"].split("c_i=")[1]).decode('utf-8'))
+        return response['connection_id'], ast.literal_eval(
+            base64.b64decode(response['invitation_url'].split("c_i=")[1]).decode('utf-8'))
 
     def receive_invitation(self, invitation_url: dict, alias: str, auto_accept: bool) -> str:
         params = {"alias": alias,
-                  "auto_accept": f"{self.format_bool(auto_accept)}"}
+                  "auto_accept": f"{self.format_bool(auto_accept)}"
+                  }
         response = requests.post(
             f"{self.__api_url}{endpoints['receive_invitation']}", params=params, json=invitation_url)
-        return response.json()["connection_id"]
+        return response.json()['connection_id']
 
     def get_connection_state(self, connection_id: str) -> int:
         response = requests.get(
             f"{self.__api_url}/connections/{connection_id}").json()
-        return states[response["state"]]
+        return states[response['state']]
 
     def create_schema(self, schema_name: str, attributes: list) -> dict:
         schema = {
@@ -58,7 +63,7 @@ class ApiHandler:
             "schema_version": "1.0"
         }
         response = requests.post(f"{self.__api_url}/schemas", json=schema)
-        return response.json()["schema"]
+        return response.json()['schema']
 
     def create_credential_definition(self, schema_id: str, schema_tag: str, support_revocation: bool = True) -> str:
         cred_def = {
@@ -85,7 +90,7 @@ class ApiHandler:
         requests.post(f"{self.__api_url}{endpoints['create_registry']}", json=registry)
         return None
 
-    def send_issue_credential(self, conn_id: str, cred_def_id: str, attributes: list, schema):
+    def send_issue_credential(self, conn_id: str, cred_def_id: str, attributes: list, schema) -> dict:
         did = cred_def_id.split(":")[0]
         credential = {
             "auto_remove": "true",
@@ -116,11 +121,16 @@ if __name__ == "__main__":
 
     # Create a auto-accept invitation on the mobile ACA-PY
     mobile_conn_id, invitation = mobile.create_invitation(
-        alias="Desktop_conn", multi_use=False, auto_accept=True)
+        alias="Desktop_conn",
+        multi_use=False,
+        auto_accept=True
+    )
 
     # receive and auto accept the invitation on the desktop
     desktop_conn_id = desktop.receive_invitation(
-        invitation_url=invitation, alias="Mobile_conn", auto_accept=True)
+        invitation_url=invitation,
+        alias="Mobile_conn", auto_accept=True
+    )
 
     # Check the connection state
     while desktop.get_connection_state(desktop_conn_id) != states["active"]:
@@ -130,23 +140,33 @@ if __name__ == "__main__":
 
     # Create schema
     schema = desktop.create_schema(
-        schema_name=schema_name, attributes=["score", "high_score"])
+        schema_name=schema_name,
+        attributes=["score", "high_score"]
+    )
     print(f"Schema id: {schema['id']}")
 
     # Create cred definition with test schema id
     cred_def_id = desktop.create_credential_definition(
-        schema_id=schema["id"], schema_tag=schema_tag, support_revocation=False)
+        schema_id=schema["id"],
+        schema_tag=schema_tag,
+        support_revocation=False
+    )
     print(f"Credential def id: {cred_def_id}")
 
-    # Create a revocatio registry for the given credential definition id
+    # Create a revocation registry for the given credential definition id
     desktop.create_revocation_registry(cred_def_id=cred_def_id)
 
     # create an ?issuable? credential
-    credential = desktop.send_issue_credential(conn_id=desktop_conn_id, cred_def_id=cred_def_id, attributes=[
-        {"mime-type": "text/plain", "name": "score", "value": "12"},
-        {"mime-type": "text/plain", "name": "high_score", "value": "300"}], schema=schema)
+    credential = desktop.send_issue_credential(
+        conn_id=desktop_conn_id,
+        cred_def_id=cred_def_id,
+        attributes=[
+            {"mime-type": "text/plain", "name": "score", "value": "12"},
+            {"mime-type": "text/plain", "name": "high_score", "value": "300"}],
+        schema=schema
+    )
     print(f"Credential exchange id: {credential['credential_exchange_id']}")
-    
+
     # Get credentials om mobile agent
     credentials = mobile.get_credentials()
     print(f"credential: {credentials['results'][0]['attrs']}")
