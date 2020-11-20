@@ -45,7 +45,7 @@ if __name__ == "__main__":
     print(f"Credential def id: {cred_def_id}")
 
     # Create a revocation registry for the given credential definition id
-    desktop.create_revocation_registry(cred_def_id=cred_def_id)
+    # desktop.create_revocation_registry(cred_def_id=cred_def_id)
 
     # Create an ?issuable? credential
     credential = desktop.send_issue_credential(
