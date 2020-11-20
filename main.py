@@ -65,14 +65,16 @@ if __name__ == "__main__":
     credentials = mobile.get_credentials()
     print(f"There are {len(credentials['results'])} credential(s)\nfirst entry: {credentials['results'][0]['attrs']}")
 
+    # Sends a proof request to mobile agent
     print("Sending proof request to mobile")
     pres_ex_id = desktop.send_proof_request(
         conn_id=desktop_conn_id,
         requested_attributes={"score_attrs":{"name":"score", "restrictions": [{"schema_name":schema_name, "schema_version": schema_version}]}},
-        #requested_predicates={"additionalProp1": {"name": "high_score", "p_type": ">=", "p_value": 250}}
         requested_predicates={"high_score":{"name":"high_score", "p_type": ">=", "p_value":250, "restrictions": [{"schema_name":schema_name, "schema_version": schema_version}]}}
     )
     print(f"Presentation exchange id: {pres_ex_id}")
+
+    # TODO: Retreive proof /present-proof/{pres_ex_id}
 
     # Wait a couple of seconds to let the mobile agent actually receive and process the proposal
     time.sleep(2)
