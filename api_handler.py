@@ -53,7 +53,7 @@ class ApiHandler:
             f"{self.__api_url}/connections/{connection_id}").json()
         return states[response['state']]
 
-    def create_schema(self, schema_name: str, schema_version: int, attributes: list) -> dict:
+    def create_schema(self, schema_name: str, schema_version: str, attributes: list) -> dict:
         schema = {
             "attributes": attributes,
             "schema_name": schema_name,
@@ -105,7 +105,8 @@ class ApiHandler:
             "schema_version": schema["version"],
             "trace": "false"
         }
-        return requests.post(f"{self.__api_url}{endpoints['issue_credential']}", json=credential).json()
+        response = requests.post(f"{self.__api_url}{endpoints['issue_credential']}", json=credential)
+        return response.json()
 
     def get_credentials(self) -> dict:
         return requests.get(f"{self.__api_url}{endpoints['get_credentials']}").json()
@@ -122,8 +123,10 @@ class ApiHandler:
                 },
                 "trace": "false"
         }
-        return requests.post(f"{self.__api_url}{endpoints['send_proposal']}",
-                             json=proposal).json()['presentation_exchange_id']
+        
+        response = requests.post(f"{self.__api_url}{endpoints['send_proposal']}",
+                             json=proposal)        
+        return response.json()['presentation_exchange_id']
 
     def get_pres_exchange_id(self):
         return requests.get(

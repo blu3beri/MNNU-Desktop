@@ -2,7 +2,7 @@ from api_handler import ApiHandler, states
 import time
 
 if __name__ == "__main__":
-    schema_version = "1.0"
+    schema_version = "69.0"
     schema_name = "schema_name" + schema_version
     schema_tag = "schema_tag" + schema_version
 
@@ -53,8 +53,8 @@ if __name__ == "__main__":
         conn_id=desktop_conn_id,
         cred_def_id=cred_def_id,
         attributes=[
-            {"mime-type": "text/plain", "name": "score", "value": "12"},
-            {"mime-type": "text/plain", "name": "high_score", "value": "300"}],
+            {"name": "score", "value": "12"},
+            {"name": "high_score", "value": "300"}],
         schema=schema
     )
     print(f"Credential exchange id: {credential['credential_exchange_id']}")
@@ -70,7 +70,7 @@ if __name__ == "__main__":
         conn_id=desktop_conn_id,
         requested_attributes={"score_attrs":{"name":"score", "restrictions": [{"schema_name":schema_name, "schema_version": schema_version}]}},
         #requested_predicates={"additionalProp1": {"name": "high_score", "p_type": ">=", "p_value": 250}}
-        requested_predicates={"high_score_attrs":{"name":"high_score", "p_type": ">=", "p_value":250, "restrictions": [{"schema_name":schema_name, "schema_version": schema_version}]}}
+        requested_predicates={"high_score":{"name":"high_score", "p_type": ">=", "p_value":250, "restrictions": [{"schema_name":schema_name, "schema_version": schema_version}]}}
     )
     print(f"Presentation exchange id: {pres_ex_id}")
 
