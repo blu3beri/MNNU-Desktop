@@ -2,9 +2,9 @@ from api_handler import ApiHandler, states
 import time
 
 if __name__ == "__main__":
-    version = "_v1.0"
-    schema_name = "schema_name" + version
-    schema_tag = "schema_tag" + version
+    schema_version = "1.0"
+    schema_name = "schema_name" + schema_version
+    schema_tag = "schema_tag" + schema_version
 
     # Create handler instances for both mobile and desktop
     mobile = ApiHandler("localhost", 7003)
@@ -32,6 +32,7 @@ if __name__ == "__main__":
     # Create schema
     schema = desktop.create_schema(
         schema_name=schema_name,
+        schema_version=schema_version,
         attributes=["score", "high_score"]
     )
     print(f"Schema id: {schema['id']}")
@@ -67,8 +68,9 @@ if __name__ == "__main__":
     print("Sending proof request to mobile")
     pres_ex_id = desktop.send_proof_request(
         conn_id=desktop_conn_id,
-        attributes={"additionalProp1": {"name": "score"}},
-        predicates={"additionalProp1": {"name": "high_score", "p_type": ">=", "p_value": 250}}
+        requested_attributes={"score_attrs":{"name":"score", "restrictions": [{"schema_name":schema_name, "schema_version": schema_version}]}},
+        #requested_predicates={"additionalProp1": {"name": "high_score", "p_type": ">=", "p_value": 250}}
+        requested_predicates={"high_score_attrs":{"name":"high_score", "p_type": ">=", "p_value":250, "restrictions": [{"schema_name":schema_name, "schema_version": schema_version}]}}
     )
     print(f"Presentation exchange id: {pres_ex_id}")
 

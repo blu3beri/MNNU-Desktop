@@ -53,11 +53,11 @@ class ApiHandler:
             f"{self.__api_url}/connections/{connection_id}").json()
         return states[response['state']]
 
-    def create_schema(self, schema_name: str, attributes: list) -> dict:
+    def create_schema(self, schema_name: str, schema_version: int, attributes: list) -> dict:
         schema = {
             "attributes": attributes,
             "schema_name": schema_name,
-            "schema_version": "1.0"
+            "schema_version": schema_version
         }
         response = requests.post(f"{self.__api_url}/schemas", json=schema)
         return response.json()['schema']
@@ -110,14 +110,14 @@ class ApiHandler:
     def get_credentials(self) -> dict:
         return requests.get(f"{self.__api_url}{endpoints['get_credentials']}").json()
 
-    def send_proof_request(self, conn_id: str, attributes: dict, predicates: dict) -> str:
+    def send_proof_request(self, conn_id: str, requested_attributes: dict, requested_predicates: dict) -> str:
         proposal = {
                 "comment": "Ik wil proof",
                 "connection_id": conn_id,
                 "proof_request": {
                     "name": "Het AIVD wil je locatie weten",
-                    "requested_attributes": attributes,
-                    "requested_predicates": predicates,
+                    "requested_attributes": requested_attributes,
+                    "requested_predicates": requested_predicates,
                     "version": "1.0"
                 },
                 "trace": "false"
