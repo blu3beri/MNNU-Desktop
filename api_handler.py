@@ -46,9 +46,7 @@ class ApiHandler:
             base64.b64decode(response['invitation_url'].split("c_i=")[1]).decode('utf-8'))
 
     def receive_invitation(self, invitation_url: dict, alias: str, auto_accept: bool) -> str:
-        params = {"alias": alias,
-                  "auto_accept": f"{self.format_bool(auto_accept)}"
-                  }
+        params = {"alias": alias, "auto_accept": f"{self.format_bool(auto_accept)}"}
         response = requests.post(
             f"{self.__api_url}{endpoints['receive_invitation']}", params=params, json=invitation_url)
         return response.json()['connection_id']
@@ -90,19 +88,20 @@ class ApiHandler:
                 f"{self.__api_url}/credential-definitions", json=cred_def, timeout=60)
         return response.json()["credential_definition_id"]
 
-    def create_revocation_registry(self, cred_def_id: str) -> None:
-        registry = {
-            "credential_definition_id": cred_def_id,
-            "max_cred_num": 1000
-        }
-        requests.post(f"{self.__api_url}{endpoints['create_registry']}", json=registry)
-        return None
+    #def create_revocation_registry(self, cred_def_id: str) -> None:
+    #    registry = {
+    #        "credential_definition_id": cred_def_id,
+    #        "max_cred_num": 1000
+    #    }
+    #    requests.post(f"{self.__api_url}{endpoints['create_registry']}", json=registry)
+    #    return None
 
-    def issue_credential(self, conn_id: str, cred_def_id: str, attributes: list, schema) -> dict:
+    def issue_credential(self, conn_id: str, cred_def_id: str, attributes: list, schema, comment:str ="") -> dict:
+        # Might cause issues if you want to use someone elses cred definition
         did = cred_def_id.split(":")[0]
         credential = {
             "auto_remove": "false",
-            "comment": "string",
+            "comment": comment,
             "connection_id": conn_id,
             "cred_def_id": cred_def_id,
             "credential_proposal": {
