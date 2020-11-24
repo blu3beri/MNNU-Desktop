@@ -13,7 +13,9 @@ endpoints = {
     "create_registry": "/revocation/create-registry",
     "get_credentials": "/credentials",
     "send_proposal": "/present-proof/send-request",
-    "base_proof": "/present-proof/records/",
+    "base_proof": "/present-proof/records",
+    "verify_presentation": "/verify-presentation",
+    "send_presentation": "/send-presentation"
 }
 
 states = {
@@ -139,17 +141,21 @@ class ApiHandler:
         return response.json()['presentation_exchange_id']
 
     def get_pres_exchange_id(self):
-        return requests.get(
-            f"{self.__api_url}{endpoints['base_proof']}").json()['results'][0]['presentation_exchange_id']
+        response = requests.get(f"{self.__api_url}{endpoints['base_proof']}")
+        return response.json()['results'][0]['presentation_exchange_id']
+        
 
-    def send_presentation(self, pres_ex_id: str, requested_attributes: dict, requested_predicates: dict) -> dict:
+    def send_presentation(self, pres_ex_id: str, requested_attributes: dict, requested_predicates: dict, self_attested_attributes: dict) -> dict:
         presentation = {
             "requested_attributes": requested_attributes,
             "requested_predicates": requested_predicates,
-            "self_attested_attributes": {},
+            "self_attested_attributes": self_attested_attributes,
             "trace": "false",
         }
-        response = requests.post(f"{self.__api_url}{endpoints['base_proof']}{pres_ex_id}/send-presentation", json=presentation)
+        response = requests.post(f"{self.__api_url}{endpoints['base_proof']}/{pres_ex_id}{endpoints['send_presentation']}", json=presentation)
         return response.json()
 
+    def verify_presentation(self, pres_ex_id: str) -> dict:
+        response = requests.post(f"{self.__api_url}{endpoints['base_proof']}/{pres_ex_id}{endpoints['verify_presentation']}")
+        return response.json()
 
