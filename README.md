@@ -1,6 +1,6 @@
 # MNNU-Desktop
 
-### CHECKLIST
+### CHECKLIST -> 1
 - [x] Revocation van een credential (gewoon weggehaald voor nu niet gefixed)
 - [x] Credential versturen naar de mobile agent
 - [x] Present-proof van dokter naar mobiel aanvragen
@@ -9,15 +9,15 @@
 - [ ] Credentials revoken
 - [ ] Credentials overschrijven
 - [x] Presen-proof delen van een credential vragen
-- [ ] auto-accept dingen uitzetten
-- [ ] alle requests handmatig accepteren
-- [ ] webhook relay
+- [x] auto-accept dingen uitzetten
+- [x] alle requests handmatig accepteren
+- [x] webhook relay
 
 
-
-### ISSUES
-- Cred ex id wordt niet aangemaakt
-
+### CHECKLIST -> 2
+- [ ] Niet meer via admin api
+- [ ] design?
  
 ### VRAGEN
 - Moeten we auto accept van credentials versturen erin laten?
+- Mag het via de admin endpoint voor POC?
