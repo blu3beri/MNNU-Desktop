@@ -7,8 +7,8 @@ endpoints = {
     "create_invitation": "/connections/create-invitation",
     "receive_invitation": "/connections/receive-invitation",
     "base_connections": "/connections/",
-    "accept_invitation":"/accept-invitation",
-    "accept_request":"/accept-request",
+    "accept_invitation": "/accept-invitation",
+    "accept_request": "/accept-request",
     "issue_credential": "/issue-credential/send",
     "create_registry": "/revocation/create-registry",
     "get_credentials": "/credentials",
@@ -39,8 +39,7 @@ class ApiHandler:
             "auto_accept": f"{self.format_bool(auto_accept)}",
             "multi_use": f"{self.format_bool(multi_use)}"
         }
-        response = requests.post(
-            f"{self.__api_url}{endpoints['create_invitation']}", params=params).json()
+        response = requests.post(f"{self.__api_url}{endpoints['create_invitation']}", params=params).json()
         # Return the connection id and decoded invitation url
         return response['connection_id'], ast.literal_eval(
             base64.b64decode(response['invitation_url'].split("c_i=")[1]).decode('utf-8'))
@@ -51,15 +50,14 @@ class ApiHandler:
             f"{self.__api_url}{endpoints['receive_invitation']}", params=params, json=invitation_url)
         return response.json()['connection_id']
 
-    def accept_invitation(self, conn_id: str) -> dict:
+    def accept_invitation(self, conn_id: str) -> None:
         requests.post(f"{self.__api_url}{endpoints['base_connections']}{conn_id}{endpoints['accept_invitation']}")
 
-    def accept_request(self, conn_id: str) -> dict:
+    def accept_request(self, conn_id: str) -> None:
         requests.post(f"{self.__api_url}{endpoints['base_connections']}{conn_id}{endpoints['accept_request']}")
 
     def get_connection_state(self, connection_id: str) -> int:
-        response = requests.get(
-            f"{self.__api_url}/connections/{connection_id}").json()
+        response = requests.get(f"{self.__api_url}/connections/{connection_id}").json()
         return states[response['state']]
 
     def create_schema(self, schema_name: str, schema_version: str, attributes: list) -> dict:
@@ -79,16 +77,14 @@ class ApiHandler:
         if support_revocation:
             cred_def["revocation_registry_size"] = 1000
             cred_def["support_revocation"] = "true"
-        response = requests.post(
-            f"{self.__api_url}/credential-definitions", json=cred_def, timeout=60)
+        response = requests.post(f"{self.__api_url}/credential-definitions", json=cred_def, timeout=60)
         # retry creating credential definition if response code is not 200
         # because of weird ACA-PY error 400 bug
         while response.status_code != 200:
-            response = requests.post(
-                f"{self.__api_url}/credential-definitions", json=cred_def, timeout=60)
+            response = requests.post(f"{self.__api_url}/credential-definitions", json=cred_def, timeout=60)
         return response.json()["credential_definition_id"]
 
-    #def create_revocation_registry(self, cred_def_id: str) -> None:
+    # def create_revocation_registry(self, cred_def_id: str) -> None:
     #    registry = {
     #        "credential_definition_id": cred_def_id,
     #        "max_cred_num": 1000
@@ -96,7 +92,7 @@ class ApiHandler:
     #    requests.post(f"{self.__api_url}{endpoints['create_registry']}", json=registry)
     #    return None
 
-    def issue_credential(self, conn_id: str, cred_def_id: str, attributes: list, schema, comment:str ="") -> dict:
+    def issue_credential(self, conn_id: str, cred_def_id: str, attributes: list, schema, comment: str = "") -> dict:
         # Might cause issues if you want to use someone elses cred definition
         did = cred_def_id.split(":")[0]
         credential = {
@@ -124,37 +120,37 @@ class ApiHandler:
 
     def send_proof_request(self, conn_id: str, requested_attributes: dict, requested_predicates: dict) -> str:
         proposal = {
-                "comment": "Ik wil proof",
-                "connection_id": conn_id,
-                "proof_request": {
-                    "name": "Het AIVD wil je locatie weten",
-                    "requested_attributes": requested_attributes,
-                    "requested_predicates": requested_predicates,
-                    "version": "1.0"
-                },
-                "trace": "false"
+            "comment": "Ik wil proof",
+            "connection_id": conn_id,
+            "proof_request": {
+                "name": "Het AIVD wil je locatie weten",
+                "requested_attributes": requested_attributes,
+                "requested_predicates": requested_predicates,
+                "version": "1.0"
+            },
+            "trace": "false"
         }
-        
-        response = requests.post(f"{self.__api_url}{endpoints['send_proposal']}",
-                             json=proposal)        
+
+        response = requests.post(f"{self.__api_url}{endpoints['send_proposal']}", json=proposal)
         return response.json()['presentation_exchange_id']
 
     def get_pres_exchange_id(self):
         response = requests.get(f"{self.__api_url}{endpoints['base_proof']}")
         return response.json()['results'][0]['presentation_exchange_id']
-        
 
-    def send_presentation(self, pres_ex_id: str, requested_attributes: dict, requested_predicates: dict, self_attested_attributes: dict) -> dict:
+    def send_presentation(self, pres_ex_id: str, requested_attributes: dict, requested_predicates: dict,
+                          self_attested_attributes: dict) -> dict:
         presentation = {
             "requested_attributes": requested_attributes,
             "requested_predicates": requested_predicates,
             "self_attested_attributes": self_attested_attributes,
             "trace": "false",
         }
-        response = requests.post(f"{self.__api_url}{endpoints['base_proof']}/{pres_ex_id}{endpoints['send_presentation']}", json=presentation)
+        response = requests.post(
+            f"{self.__api_url}{endpoints['base_proof']}/{pres_ex_id}{endpoints['send_presentation']}",
+            json=presentation)
         return response.json()
 
     def verify_presentation(self, pres_ex_id: str) -> dict:
-        response = requests.post(f"{self.__api_url}{endpoints['base_proof']}/{pres_ex_id}{endpoints['verify_presentation']}")
-        return response.json()
-
+        return requests.post(
+            f"{self.__api_url}{endpoints['base_proof']}/{pres_ex_id}{endpoints['verify_presentation']}").json()
