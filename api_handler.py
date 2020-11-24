@@ -6,11 +6,14 @@ from typing import Tuple
 endpoints = {
     "create_invitation": "/connections/create-invitation",
     "receive_invitation": "/connections/receive-invitation",
+    "base_connections": "/connections/",
+    "accept_invitation":"/accept-invitation",
+    "accept_request":"/accept-request",
     "issue_credential": "/issue-credential/send",
     "create_registry": "/revocation/create-registry",
     "get_credentials": "/credentials",
     "send_proposal": "/present-proof/send-request",
-    "base_proof": "/present-proof/records",
+    "base_proof": "/present-proof/records/",
 }
 
 states = {
@@ -47,6 +50,12 @@ class ApiHandler:
         response = requests.post(
             f"{self.__api_url}{endpoints['receive_invitation']}", params=params, json=invitation_url)
         return response.json()['connection_id']
+
+    def accept_invitation(self, conn_id: str) -> dict:
+        requests.post(f"{self.__api_url}{endpoints['base_connections']}{conn_id}{endpoints['accept_invitation']}")
+
+    def accept_request(self, conn_id: str) -> dict:
+        requests.post(f"{self.__api_url}{endpoints['base_connections']}{conn_id}{endpoints['accept_request']}")
 
     def get_connection_state(self, connection_id: str) -> int:
         response = requests.get(
@@ -87,10 +96,10 @@ class ApiHandler:
         requests.post(f"{self.__api_url}{endpoints['create_registry']}", json=registry)
         return None
 
-    def send_issue_credential(self, conn_id: str, cred_def_id: str, attributes: list, schema) -> dict:
+    def issue_credential(self, conn_id: str, cred_def_id: str, attributes: list, schema) -> dict:
         did = cred_def_id.split(":")[0]
         credential = {
-            "auto_remove": "true",
+            "auto_remove": "false",
             "comment": "string",
             "connection_id": conn_id,
             "cred_def_id": cred_def_id,
@@ -109,7 +118,8 @@ class ApiHandler:
         return response.json()
 
     def get_credentials(self) -> dict:
-        return requests.get(f"{self.__api_url}{endpoints['get_credentials']}").json()
+        response = requests.get(f"{self.__api_url}{endpoints['get_credentials']}")
+        return response.json()
 
     def send_proof_request(self, conn_id: str, requested_attributes: dict, requested_predicates: dict) -> str:
         proposal = {
@@ -139,8 +149,7 @@ class ApiHandler:
             "self_attested_attributes": {},
             "trace": "false",
         }
-        response = requests.post(f"{self.__api_url}{endpoints['base_proof']}/{pres_ex_id}/send-presentation", json=presentation)
-        print(response.text)
+        response = requests.post(f"{self.__api_url}{endpoints['base_proof']}{pres_ex_id}/send-presentation", json=presentation)
         return response.json()
 
 

@@ -11,17 +11,24 @@ if __name__ == "__main__":
     desktop = ApiHandler("localhost", 7001)
 
     # Create a auto-accept invitation on the mobile ACA-PY
-    mobile_conn_id, invitation = mobile.create_invitation(
-        alias="Desktop_conn",
+    desktop_conn_id, invitation = desktop.create_invitation(
+        alias="Mobile_conn",
         multi_use=False,
-        auto_accept=True
+        auto_accept=False
     )
 
     # receive and auto accept the invitation on the desktop
-    desktop_conn_id = desktop.receive_invitation(
+    mobile_conn_id = mobile.receive_invitation(
         invitation_url=invitation,
-        alias="Mobile_conn", auto_accept=True
+        alias="Desktop_conn", auto_accept=False
     )
+
+    print(f"mobile connection id: {mobile_conn_id}")
+    print(f"desktop connection id: {desktop_conn_id}")
+    mobile.accept_invitation(mobile_conn_id)
+    time.sleep(1)
+    desktop.accept_request(desktop_conn_id)
+    time.sleep(1)
 
     # Check the connection state
     while desktop.get_connection_state(desktop_conn_id) != states["active"]:
@@ -49,7 +56,7 @@ if __name__ == "__main__":
     # desktop.create_revocation_registry(cred_def_id=cred_def_id)
 
     # Create an ?issuable? credential
-    credential = desktop.send_issue_credential(
+    credential = desktop.issue_credential(
         conn_id=desktop_conn_id,
         cred_def_id=cred_def_id,
         attributes=[
@@ -63,6 +70,7 @@ if __name__ == "__main__":
     time.sleep(2)
     # Get credentials om mobile agent
     credentials = mobile.get_credentials()
+
     print(f"There are {len(credentials['results'])} credential(s)\nfirst entry: {credentials['results'][0]['attrs']}")
 
     # Sends a proof request to mobile agent
