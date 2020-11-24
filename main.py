@@ -41,7 +41,9 @@ if __name__ == "__main__":
     while desktop.get_connection_state(desktop_conn_id) != states["active"]:
         print("Connection state is not active...")
         sleep()
+    print("-"*50)
     print("Connection state is active!")
+    print("-"*50)
 
     # Create schema
     schema = desktop.create_schema(
@@ -51,7 +53,10 @@ if __name__ == "__main__":
     )
     print(f"desktop -> schema id: {schema['id']}")
 
+    print("-"*50)
     print("Creating credential definition, please have patients...")
+    print("-"*50)
+
     # Create cred definition with test schema id
     cred_def_id = desktop.create_credential_definition(
         schema_id=schema["id"],
@@ -75,11 +80,14 @@ if __name__ == "__main__":
     # Get credentials om mobile agent
     credentials = mobile.get_credentials()
 
-    print(f"mobile  -> there are {len(credentials['results'])} credential(s)")
-    print(f"mobile  -> {credentials['results'][0]['attrs']}")
+    print(f"mobile  -> there is/are {len(credentials['results'])} credential(s)")
+    print(f"mobile  -> credential: {credentials['results'][0]['attrs']}")
 
     # Sends a proof request to mobile agent
+    print("-"*50)
     print("Sending proof request to mobile...")
+    print("-"*50)
+
     desktop_pres_ex_id = desktop.send_proof_request(
         conn_id=desktop_conn_id,
         requested_attributes={"score_attrs":{"name":"score", "restrictions": [{"schema_name":schema_name, "schema_version": schema_version}]}},
@@ -90,7 +98,10 @@ if __name__ == "__main__":
     sleep()
 
     # Sends the presentation to the desktop
-    print("Sending presentation from mobile to desktop")
+    print("-"*50)
+    print("Sending presentation from mobile to desktop...")
+    print("-"*50)
+
     pres_response = mobile.send_presentation(
         pres_ex_id=mobile.get_pres_exchange_id(),
         requested_attributes={"score_attrs":{"cred_id":credentials['results'][0]['referent'], "revealed":True}},
@@ -101,7 +112,10 @@ if __name__ == "__main__":
 
     sleep()
 
+    print("-"*50)
     print("verifying the presentation...")
+    print("-"*50)
+
     res = desktop.verify_presentation(pres_ex_id=desktop_pres_ex_id)
     print("desktop -> proof has been verified" if bool(res) else "Proof has not been verified :(")
 
