@@ -1,3 +1,4 @@
 .idea/
 __pycache__/
 ui/*.py
+resource_rc.py

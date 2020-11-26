@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>img/blank-profile-picture.png</file>
+    </qresource>
+</RCC>

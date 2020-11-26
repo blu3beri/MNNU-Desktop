@@ -1,5 +1,11 @@
 # MNNU-Desktop
 
+### How to use the GUI
+1. Install the required Python modules using: `pip3 -r requirements.txt`
+2. Compile mainwindow.ui using: `pyuic5 mainwindow.ui -o MainWindow.py`
+3. Compile the resource file using: `pyrcc5 resources.qrc -o resource_rc.py`
+4. execute main.py using: `python3 main.py`
+
 ### CHECKLIST -> 1
 - [x] Revocation van een credential (gewoon weggehaald voor nu niet gefixed)
 - [x] Credential versturen naar de mobile agent
