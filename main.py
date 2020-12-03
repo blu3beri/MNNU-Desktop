@@ -1,7 +1,8 @@
 import sys
-from PyQt5 import QtWidgets, uic, QtCore
+from PyQt5 import QtWidgets, QtCore
 
 from ui.MainWindow import Ui_MainWindow
+from settings import Settings
 from library.api_handler import ApiHandler
 
 
@@ -16,22 +17,31 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.clockTimer.start(1000)
 
         # Set handler for generate invite button
-        self.generateinvite.clicked.connect(self.onGenerateInviteClicked)
+        self.generateInvite.clicked.connect(self.onGenerateInviteClicked)
+        # Set handler for settings button
+        self.actionInstellingen.triggered.connect(self.onSettingsMenuClicked)
 
     def showTime(self):
         time = QtCore.QTime.currentTime()
-        self.lcdNumber.display(time.toString("hh:mm"))
+        self.lcdClock.display(time.toString("hh:mm"))
+
+    def onSettingsMenuClicked(self):
+        print("Clicked settings")
+        settingsDialog = Settings()
+        settingsDialog.exec_()
+        ip = settingsDialog.ipvalue.text()
+        port = int(settingsDialog.portvalue.text())
+        print(f"Received: {ip}:{port}")
 
     def onGenerateInviteClicked(self):
         print("Clicked on generate invite")
-        first_name = self.nameinput.text()
-        middle_name = self.middlenameinput.text()
-        last_name = self.lastnameinput.text()
+        first_name = self.nameInput.text()
+        middle_name = self.middleNameInput.text()
+        last_name = self.lastNameInput.text()
         print(f"The following input was given: {first_name} {middle_name} {last_name}.")
 
 
 app = QtWidgets.QApplication(sys.argv)
-
 window = MainWindow()
 window.show()
-app.exec()
+sys.exit(app.exec())

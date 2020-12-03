@@ -34,7 +34,7 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="mnnulogo">
+        <widget class="QLabel" name="mnnuLogo">
          <property name="font">
           <font>
            <pointsize>20</pointsize>
@@ -83,7 +83,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
-         <widget class="QFrame" name="doctorframe">
+         <widget class="QFrame" name="doctorFrame">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -92,7 +92,7 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QFrame" name="frame">
+            <widget class="QFrame" name="welcomeFrame">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                <horstretch>0</horstretch>
@@ -107,7 +107,7 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
-               <widget class="QLabel" name="welcomelabel">
+               <widget class="QLabel" name="welcomeLabel">
                 <property name="font">
                  <font>
                   <pointsize>17</pointsize>
@@ -127,7 +127,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLCDNumber" name="lcdNumber">
+               <widget class="QLCDNumber" name="lcdClock">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                   <horstretch>0</horstretch>
@@ -153,7 +153,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QFrame" name="patientframe">
+         <widget class="QFrame" name="patientFrame">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -162,7 +162,7 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="QGroupBox" name="selectpatientgroup">
+            <widget class="QGroupBox" name="selectPatientGroup">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                <horstretch>0</horstretch>
@@ -174,7 +174,7 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
-               <widget class="QComboBox" name="patientselection">
+               <widget class="QComboBox" name="patientSelectionBox">
                 <item>
                  <property name="text">
                   <string>Diederik Dieders</string>
@@ -211,7 +211,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="connectiongroup">
+            <widget class="QGroupBox" name="connectionGroup">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                <horstretch>0</horstretch>
@@ -223,50 +223,50 @@
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_6">
               <item>
-               <widget class="QWidget" name="inputframe" native="true">
+               <widget class="QWidget" name="inputFrame" native="true">
                 <layout class="QFormLayout" name="formLayout">
                  <item row="0" column="0">
-                  <widget class="QLabel" name="namelabel">
+                  <widget class="QLabel" name="nameLabel">
                    <property name="text">
                     <string>Naam:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="0" column="1">
-                  <widget class="QLineEdit" name="nameinput"/>
+                  <widget class="QLineEdit" name="nameInput"/>
                  </item>
                  <item row="2" column="0">
-                  <widget class="QLabel" name="lastnamelabel">
+                  <widget class="QLabel" name="lastNameLabel">
                    <property name="text">
                     <string>Achternaam:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLineEdit" name="lastnameinput"/>
+                  <widget class="QLineEdit" name="lastNameInput"/>
                  </item>
                  <item row="3" column="0">
-                  <widget class="QPushButton" name="generateinvite">
+                  <widget class="QPushButton" name="generateInvite">
                    <property name="text">
                     <string>Genereer QR code</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="QLabel" name="middlenamelabel">
+                  <widget class="QLabel" name="middleNameLabel">
                    <property name="text">
                     <string>Tussenvoegsel:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QLineEdit" name="middlenameinput"/>
+                  <widget class="QLineEdit" name="middleNameInput"/>
                  </item>
                 </layout>
                </widget>
               </item>
               <item>
-               <widget class="QFrame" name="qrcodeframe">
+               <widget class="QFrame" name="qrCodeFrame">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -281,7 +281,7 @@
                 </property>
                 <layout class="QGridLayout" name="gridLayout_2">
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label">
+                  <widget class="QLabel" name="qrCodeLabel">
                    <property name="font">
                     <font>
                      <pointsize>20</pointsize>
@@ -308,19 +308,19 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="patientinformation">
+      <widget class="QWidget" name="patientInformation">
        <attribute name="title">
         <string>Patiëntgegevens</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QGroupBox" name="nawrecordsgroup">
+         <widget class="QGroupBox" name="nawRecordsGroup">
           <property name="title">
            <string>NAW gegevens</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QListWidget" name="keynaw">
+            <widget class="QListWidget" name="keyNaw">
              <item>
               <property name="text">
                <string>Naam</string>
@@ -339,7 +339,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QListWidget" name="valuenaw">
+            <widget class="QListWidget" name="valueNaw">
              <item>
               <property name="text">
                <string>Diederik</string>
@@ -361,7 +361,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="medicalrecordsgroup">
+         <widget class="QGroupBox" name="medicalRecordsGroup">
           <property name="title">
            <string>Medische gegevens</string>
           </property>
@@ -373,13 +373,13 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="patientpicturebox">
+         <widget class="QGroupBox" name="patientPictureBox">
           <property name="title">
            <string>Patiënt foto</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <widget class="QLabel" name="patientpicture">
+            <widget class="QLabel" name="patientPicture">
              <property name="minimumSize">
               <size>
                <width>300</width>
@@ -427,7 +427,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
-         <widget class="QGroupBox" name="hostpitaldiagnostics">
+         <widget class="QGroupBox" name="hostpitalDiagnostics">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -466,7 +466,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="owndiagnostics">
+         <widget class="QGroupBox" name="ownDiagnostics">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -478,7 +478,7 @@
           </property>
           <layout class="QFormLayout" name="formLayout_2">
            <item row="1" column="0">
-            <widget class="QPushButton" name="savediagnostics">
+            <widget class="QPushButton" name="saveDiagnostics">
              <property name="text">
               <string>Opslaan</string>
              </property>
@@ -526,16 +526,16 @@
     <property name="title">
      <string>Bestand</string>
     </property>
-   </widget>
-   <widget class="QMenu" name="menudebugger">
-    <property name="title">
-     <string>Opties</string>
-    </property>
+    <addaction name="actionInstellingen"/>
    </widget>
    <addaction name="menuBestand"/>
-   <addaction name="menudebugger"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionInstellingen">
+   <property name="text">
+    <string>Instellingen</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../resource.qrc"/>
