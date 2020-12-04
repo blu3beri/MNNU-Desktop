@@ -33,6 +33,19 @@ class ApiHandler:
     def format_bool(x):
         return str(x).lower() if isinstance(x, bool) else x
 
+    def set_url(self, api_url: str, port: int) -> None:
+        self.__api_url = f"http://{api_url}:{port}"
+
+    def test_connection(self) -> bool:
+        try:
+            response = requests.get(f"{self.__api_url}/status")
+            if response.status_code == 200:
+                return True
+            return False
+        except requests.exceptions.ConnectionError as e:
+            print("connection refused")
+            return False
+
     def create_invitation(self, alias: str, multi_use: bool, auto_accept: bool) -> Tuple[str, dict]:
         params = {
             "alias": alias,
