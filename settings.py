@@ -15,9 +15,9 @@ class Settings(QtWidgets.QDialog, Ui_Dialog):
 
     def onTestConnectionClicked(self):
         ip = self.ipvalue.text()
-        port = int(self.portvalue.text())
-        # Check if both values are filled in
-        if ip is not None and port is not None:
+        port = int(self.portvalue.text() or 0)
+        # Check if both values are correctly filled in
+        if ip and port is not 0:
             self.api.set_url(ip, port)
             if self.api.test_connection():
                 self.connstatus.setStyleSheet("color: rgb(0, 255, 0);")
