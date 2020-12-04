@@ -11,6 +11,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
 
+        # Create API Handler instance with default ip and port
+        self.api = ApiHandler("localhost", 7001)
+
         # Create timer for digital clock
         self.clockTimer = QtCore.QTimer(self)
         self.clockTimer.timeout.connect(self.showTime)
@@ -27,10 +30,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def onSettingsMenuClicked(self):
         print("Clicked settings")
-        settingsDialog = Settings()
-        settingsDialog.exec_()
-        ip = settingsDialog.ipvalue.text()
-        port = int(settingsDialog.portvalue.text())
+        settings_dialog = Settings(self.api)
+        settings_dialog.exec_()
+        ip = settings_dialog.ipvalue.text()
+        port = int(settings_dialog.portvalue.text())
         print(f"Received: {ip}:{port}")
 
     def onGenerateInviteClicked(self):
