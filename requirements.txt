@@ -1,2 +1,4 @@
 requests
 PyQt5
+Pillow
+qrcode
