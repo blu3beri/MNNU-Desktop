@@ -73,6 +73,9 @@ class ApiHandler:
         response = requests.get(f"{self.__api_url}/connections/{connection_id}").json()
         return states[response['state']]
 
+    def get_agent_name(self) -> str:
+        return requests.get(f"{self.__api_url}/status").json()["label"]
+
     def create_schema(self, schema_name: str, schema_version: str, attributes: list) -> dict:
         schema = {
             "attributes": attributes,
