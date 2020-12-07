@@ -25,6 +25,7 @@ states = {
 }
 
 
+# TODO: Check if this class can be ran inside a separate thread so the program doesn't hang when the ACA-PY is offline
 class ApiHandler:
     def __init__(self, api_url: str, port: int):
         self.__api_url = f"http://{api_url}:{port}"
