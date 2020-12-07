@@ -13,6 +13,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
+        # TODO: Create config file to save certain properties like the ACA-PY instance port/ip
 
         # Create API Handler instance with default ip and port
         self.api = ApiHandler("localhost", 7001)
@@ -22,8 +23,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Create timer for digital clock
         self.clockTimer = QtCore.QTimer(self)
-        self.clockTimer.timeout.connect(self.showTime)
-        self.clockTimer.start(1000)
+        self.clockTimer.timeout.connect(self.__showTime)
+        self.clockTimer.start(1)  # Update the time (almost) instant upon start
+
+        # Create timer for greetings text
+        self.greetingsTimer = QtCore.QTimer(self)
+        self.greetingsTimer.timeout.connect(self.__updateGreetings)
+        self.greetingsTimer.start(1)  # Update the greeting (almost) instant upon start
 
         # Set handler for generate invite button
         self.generateInvite.clicked.connect(self.onGenerateInviteClicked)
@@ -43,9 +49,31 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         img.save(filename)
         return filename
 
-    def showTime(self):
+    def __showTime(self):
         time = QtCore.QTime.currentTime()
         self.lcdClock.display(time.toString("hh:mm"))
+        self.clockTimer.setInterval(1000)  # Set the interval to update the time every second
+
+    def __updateGreetings(self):
+        # Check if there is an valid connection and then get the agent name
+        if self.api.test_connection():
+            agent = self.api.get_agent_name()
+        else:
+            # TODO: Make sure message is clear to end user and not too technical
+            self.welcomeLabel.setText("Geen verbinding met agent")
+            self.greetingsTimer.setInterval(10000)  # Update the greeting every second if there is no connection
+            return
+        # Get the current time
+        time = QtCore.QTime.currentTime()
+        # TODO: Should probably also check the minutes
+        if time.hour() <= 12:
+            greeting = "Goede morgen"
+        elif 13 <= time.hour() <= 18:
+            greeting = "Goede middag"
+        else:
+            greeting = "Goede avond"
+        self.welcomeLabel.setText(f"{greeting} {agent}")
+        self.greetingsTimer.setInterval(60000)  # Set the interval to only check every minute
 
     def onSettingsMenuClicked(self):
         print("Clicked settings")
