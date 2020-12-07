@@ -17,7 +17,7 @@ class Settings(QtWidgets.QDialog, Ui_Dialog):
         ip = self.ipvalue.text()
         port = int(self.portvalue.text() or 0)
         # Check if both values are correctly filled in
-        if ip and port is not 0:
+        if ip and port != 0:
             self.api.set_url(ip, port)
             if self.api.test_connection():
                 self.connstatus.setStyleSheet("color: rgb(0, 255, 0);")
