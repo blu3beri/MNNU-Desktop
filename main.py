@@ -72,7 +72,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 auto_accept=False)
             print(f"Generated invite: {invite}")
             self.qrCodeLabel.setPixmap(QtGui.QPixmap(self.__createInviteQr(invite=invite)).scaled(224, 224))
-            print(self.temp_dir.name)
+            # TODO: Check QT docs on how to scale the image properly, remove qr when connection is established
             return
         # TODO: To the same label, notify user that the connection to the API failed thus no invite was created
         print("Connection to ACA-PY failed, is the instance running and are the correct ip/port specified?")
