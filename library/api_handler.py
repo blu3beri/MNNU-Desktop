@@ -46,7 +46,7 @@ class ApiHandler:
             print("connection refused")
             return False
 
-    def create_invitation(self, alias: str, multi_use: bool, auto_accept: bool) -> Tuple[str, dict]:
+    def create_invitation(self, alias: str, multi_use: bool, auto_accept: bool) -> Tuple[str, str]:
         params = {
             "alias": alias,
             "auto_accept": f"{self.format_bool(auto_accept)}",
@@ -54,13 +54,13 @@ class ApiHandler:
         }
         response = requests.post(f"{self.__api_url}{endpoints['create_invitation']}", params=params).json()
         # Return the connection id and decoded invitation url
-        return response['connection_id'], ast.literal_eval(
-            base64.b64decode(response['invitation_url'].split("c_i=")[1]).decode('utf-8'))
+        return response['connection_id'], response['invitation_url'].split("c_i=")[1]
 
-    def receive_invitation(self, invitation_url: dict, alias: str, auto_accept: bool) -> str:
+    def receive_invitation(self, invitation_url: str, alias: str, auto_accept: bool) -> str:
         params = {"alias": alias, "auto_accept": f"{self.format_bool(auto_accept)}"}
+        decoded_url = ast.literal_eval(base64.b64decode(invitation_url).decode('utf-8'))
         response = requests.post(
-            f"{self.__api_url}{endpoints['receive_invitation']}", params=params, json=invitation_url)
+            f"{self.__api_url}{endpoints['receive_invitation']}", params=params, json=decoded_url)
         return response.json()['connection_id']
 
     def accept_invitation(self, conn_id: str) -> None:
