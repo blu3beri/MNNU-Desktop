@@ -18,10 +18,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Create API Handler instance with default ip and port
         self.api = ApiHandler("localhost", 7001)
+        # Disable the patient tabs on startup
+        self.__disablePatientTabs()
 
+        #####################
+        #  State variables  #
+        #####################
+        # List of active connection aliases
+        self.activeAliases = self.__getActiveConnectionAliases()
         # Temp dir for images and misc stuff will be removed when program closes
-        self.temp_dir = tempfile.TemporaryDirectory()
+        self.tempDir = tempfile.TemporaryDirectory()
+        # Keep track of the current alias
+        self.currentAlias = None
 
+        ####################
+        #      Timers      #
+        ####################
         # Create timer for digital clock
         self.clockTimer = QtCore.QTimer(self)
         self.clockTimer.timeout.connect(self.__showTime)
@@ -32,23 +44,40 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.greetingsTimer.timeout.connect(self.__updateGreetings)
         self.greetingsTimer.start(1)  # Update the greeting (almost) instant upon start
 
+        ####################
+        #     Handlers     #
+        ####################
         # Set handler for generate invite button
         self.generateInvite.clicked.connect(self.onGenerateInviteClicked)
         # Set handler for settings button
         self.actionInstellingen.triggered.connect(self.onSettingsMenuClicked)
 
     def __del__(self):
-        self.temp_dir.cleanup()
+        self.tempDir.cleanup()
 
-    def __createInviteQr(self, invite) -> str:
+    def __createInviteQr(self, invite: str) -> str:
         qr = qrcode.QRCode(version=1, box_size=10, border=5)
         qr.add_data(invite)
         qr.make(fit=True)
         img = qr.make_image(fill='black', back_color='white')
         # Generate random filename
-        filename = f"{self.temp_dir.name}/{uuid.uuid4().hex}.png"
+        filename = f"{self.tempDir.name}/{uuid.uuid4().hex}.png"
         img.save(filename)
         return filename
+
+    def __getActiveConnectionAliases(self) -> list:
+        aliases = []
+        # If there is no active connection, return an empty list
+        if not self.api.test_connection():
+            return aliases
+        connections = self.api.get_connections(state="active")["results"]
+        for connection in connections:
+            # Check if the connection actually has an alias
+            if "alias" not in connection:
+                continue
+            else:
+                aliases.append(connection["alias"])
+        return aliases
 
     def __showTime(self):
         time = QtCore.QTime.currentTime()
@@ -74,6 +103,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             greeting = "Goedenavond"
         self.welcomeLabel.setText(f"{greeting} {agent}")
         self.greetingsTimer.setInterval(60000)  # Set the interval to only check every minute
+
+    def __disablePatientTabs(self):
+        for i in range(1, self.tabWidget.count()):
+            self.tabWidget.setTabEnabled(i, False)
 
     def onSettingsMenuClicked(self):
         print("Clicked settings")
