@@ -57,7 +57,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __updateGreetings(self):
         # Check if there is an valid connection and then get the agent name
         if self.api.test_connection():
-            agent = self.api.get_agent_name()
+            agent = self.api.get_agent_name().replace("_", " ")
         else:
             # TODO: Make sure message is clear to end user and not too technical
             self.welcomeLabel.setText("Geen verbinding met agent")
