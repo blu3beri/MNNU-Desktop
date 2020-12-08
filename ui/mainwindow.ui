@@ -224,7 +224,7 @@
                  <item row="2" column="1">
                   <widget class="QLineEdit" name="lastNameInput"/>
                  </item>
-                 <item row="3" column="0">
+                 <item row="4" column="0">
                   <widget class="QPushButton" name="generateInvite">
                    <property name="text">
                     <string>Genereer QR code</string>
@@ -241,7 +241,7 @@
                  <item row="1" column="1">
                   <widget class="QLineEdit" name="middleNameInput"/>
                  </item>
-                 <item row="4" column="0" colspan="2">
+                 <item row="5" column="0" colspan="2">
                   <widget class="QLabel" name="connLabel">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -254,6 +254,20 @@
                    </property>
                    <property name="text">
                     <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="bsnLabel">
+                   <property name="text">
+                    <string>BSN:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QSpinBox" name="bsnInput">
+                   <property name="maximum">
+                    <number>999999999</number>
                    </property>
                   </widget>
                  </item>

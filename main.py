@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 import qrcode
 import tempfile
 import uuid
+import re
 
 from ui.MainWindow import Ui_MainWindow
 from settings import Settings
@@ -61,7 +62,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             # TODO: Make sure message is clear to end user and not too technical
             self.welcomeLabel.setText("Geen verbinding met agent")
-            self.greetingsTimer.setInterval(10000)  # Update the greeting every second if there is no connection
+            self.greetingsTimer.setInterval(10000)  # Update the greeting every 10 seconds if there is no connection
             return
         # Get the current time
         time = int(QtCore.QTime.currentTime().toString("hhmm"))
@@ -86,14 +87,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         f_name = self.nameInput.text()
         m_name = self.middleNameInput.text()
         l_name = self.lastNameInput.text()
+        bsn = self.bsnInput.text()
         # Check if at least fist_name and last_name are filled in
         if not f_name or not l_name:
             print("First name and/or last name is empty")
             self.connLabel.setText("Voornaam en/of achternaam is leeg")
             return
+        elif not re.match(r"^[0-9]{9}$", bsn):
+            print("BSN is empty")
+            self.connLabel.setText("BSN is leeg of klopt niet")
+            return
         # Generate invitation url
         if self.api.test_connection():
-            alias = f"{f_name} {m_name+' ' if m_name else ''}{l_name}"
+            alias = f"{f_name} {m_name+' ' if m_name else ''}{l_name} {bsn}"
             print(f"The following input was given: {alias}")
             # Check if a connection with this alias already exists
             conn = self.api.get_connections(alias=alias)["results"]
