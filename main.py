@@ -64,11 +64,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.greetingsTimer.setInterval(10000)  # Update the greeting every second if there is no connection
             return
         # Get the current time
-        time = QtCore.QTime.currentTime()
-        # TODO: Should probably also check the minutes
-        if time.hour() <= 12:
+        time = int(QtCore.QTime.currentTime().toString("hhmm"))
+        if time <= 1200:
             greeting = "Goedemorgen"
-        elif 13 <= time.hour() <= 18:
+        elif 1201 <= time <= 1800:
             greeting = "Goedemiddag"
         else:
             greeting = "Goedenavond"

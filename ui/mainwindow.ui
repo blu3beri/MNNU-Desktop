@@ -160,8 +160,8 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <item>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
             <widget class="QGroupBox" name="selectPatientGroup">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -172,48 +172,27 @@
              <property name="title">
               <string>Selecteer patiënt</string>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
+             <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
-               <widget class="QComboBox" name="patientSelectionBox">
-                <item>
-                 <property name="text">
-                  <string>Diederik Dieders</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Berend Sliedrecht</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Nathan Hoekstra</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Tyler Rasink</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Roy van der Vlist</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Frank Brouwers</string>
-                 </property>
-                </item>
+               <widget class="QComboBox" name="selectPatientBox">
+                <property name="editable">
+                 <bool>true</bool>
+                </property>
+                <property name="currentText">
+                 <string/>
+                </property>
+                <property name="placeholderText">
+                 <string>Selecteer patiënt</string>
+                </property>
                </widget>
               </item>
              </layout>
             </widget>
            </item>
-           <item>
+           <item row="1" column="0" colspan="2">
             <widget class="QGroupBox" name="connectionGroup">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
