@@ -77,6 +77,12 @@ class ApiHandler:
     def get_agent_name(self) -> str:
         return requests.get(f"{self.__api_url}/status").json()["label"]
 
+    def get_connections(self, alias: str = None) -> dict:
+        params = {}
+        if alias:
+            params["alias"] = alias
+        return requests.get(f"{self.__api_url}/connections", params=params).json()
+
     def create_schema(self, schema_name: str, schema_version: str, attributes: list) -> dict:
         schema = {
             "attributes": attributes,
