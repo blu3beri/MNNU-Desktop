@@ -262,6 +262,22 @@
                  <item row="1" column="1">
                   <widget class="QLineEdit" name="middleNameInput"/>
                  </item>
+                 <item row="4" column="0" colspan="2">
+                  <widget class="QLabel" name="connLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">color: rgb(255, 0, 0);</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </widget>
               </item>
@@ -296,7 +312,7 @@
                     </font>
                    </property>
                    <property name="text">
-                    <string>[QR CODE]</string>
+                    <string/>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignCenter</set>

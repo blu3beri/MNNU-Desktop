@@ -67,11 +67,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         time = QtCore.QTime.currentTime()
         # TODO: Should probably also check the minutes
         if time.hour() <= 12:
-            greeting = "Goede morgen"
+            greeting = "Goedemorgen"
         elif 13 <= time.hour() <= 18:
-            greeting = "Goede middag"
+            greeting = "Goedemiddag"
         else:
-            greeting = "Goede avond"
+            greeting = "Goedenavond"
         self.welcomeLabel.setText(f"{greeting} {agent}")
         self.greetingsTimer.setInterval(60000)  # Set the interval to only check every minute
 
@@ -83,26 +83,37 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def onGenerateInviteClicked(self):
         print("Clicked on generate invite")
+        self.connLabel.setText("")  # Reset the conn label when button is pressed
         f_name = self.nameInput.text()
         m_name = self.middleNameInput.text()
         l_name = self.lastNameInput.text()
         # Check if at least fist_name and last_name are filled in
         if not f_name or not l_name:
             print("First name and/or last name is empty")
-            # TODO: Add label to GUI to notify user of missing input field values
+            self.connLabel.setText("Voornaam en/of achternaam is leeg")
             return
         # Generate invitation url
         if self.api.test_connection():
-            print(f"The following input was given: {f_name} {m_name+' ' if m_name else ''}{l_name}.")
+            alias = f"{f_name} {m_name+' ' if m_name else ''}{l_name}"
+            print(f"The following input was given: {alias}")
+            # Check if a connection with this alias already exists
+            conn = self.api.get_connections(alias=alias)["results"]
+            if len(conn):
+                print("Connection already exists with this alias")
+                self.connLabel.setText(f"Er bestaat al een connectie met deze naam\n"
+                                       f"De status van deze connectie is: {conn[0]['state']}")
+                return  # Don't execute the rest of the code since we don't want duplicates
+            # Create a new invitation
             conn_id, invite = self.api.create_invitation(
-                alias=f"{f_name} {m_name+' ' if m_name else ''}{l_name}",
+                alias=alias,
                 multi_use=False,
                 auto_accept=False)
             print(f"Generated invite: {invite}")
             self.qrCodeLabel.setPixmap(QtGui.QPixmap(self.__createInviteQr(invite=invite)).scaled(224, 224))
             # TODO: Check QT docs on how to scale the image properly, remove qr when connection is established
             return
-        # TODO: To the same label, notify user that the connection to the API failed thus no invite was created
+        self.connLabel.setText("Geen verbinding mogelijk met ACA-PY.\n"
+                               "Staat de server aan en is de juiste ip/poort ingesteld?")
         print("Connection to ACA-PY failed, is the instance running and are the correct ip/port specified?")
 
 
