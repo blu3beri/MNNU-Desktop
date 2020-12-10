@@ -112,8 +112,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.tabWidget.setTabEnabled(i, state)
 
     def __fillPatientSelectionBox(self, patients: list) -> None:
+        patients = ["-- Selecteer patiënt --"] + sorted(patients, key=str.lower)
         self.selectPatientBox.clear()
-        self.selectPatientBox.addItems(sorted(patients, key=str.lower))
+        self.selectPatientBox.addItems(patients)
+        self.selectPatientBox.setCurrentIndex(0)
 
     def onSettingsMenuClicked(self) -> None:
         print("Clicked settings")
@@ -124,10 +126,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def onSelectPatientClicked(self) -> None:
         print("Clicked on select patient")
         alias = self.selectPatientBox.currentText()
-        if not alias:
+        if not alias or self.selectPatientBox.currentIndex() == 0:
             print("No patient selected")
+            self.__patientTabsEnabled(False)
             return
-        print(f"Alias: {alias}")
+        # Enable the patient tabs since a patient is selected
+        self.__patientTabsEnabled(True)
+        print(f"Selected alias: {alias}")
+        # TODO: Fill in all the available patient information in their corresponding tab
 
     def onGenerateInviteClicked(self) -> None:
         print("Clicked on generate invite")
