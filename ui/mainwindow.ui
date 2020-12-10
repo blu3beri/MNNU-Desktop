@@ -160,8 +160,8 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <layout class="QGridLayout" name="gridLayout_4">
-           <item row="0" column="0">
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
             <widget class="QGroupBox" name="selectPatientGroup">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -172,24 +172,49 @@
              <property name="title">
               <string>Selecteer patiënt</string>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_4">
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
               <item>
                <widget class="QComboBox" name="selectPatientBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>400</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="editable">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <property name="currentText">
-                 <string/>
+                 <string>Selecteer patiënt</string>
                 </property>
                 <property name="placeholderText">
                  <string>Selecteer patiënt</string>
                 </property>
                </widget>
               </item>
+              <item>
+               <widget class="QPushButton" name="confirmPatientBtn">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Selecteer</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
            </item>
-           <item row="1" column="0" colspan="2">
+           <item>
             <widget class="QGroupBox" name="connectionGroup">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -214,6 +239,16 @@
                  <item row="0" column="1">
                   <widget class="QLineEdit" name="nameInput"/>
                  </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="middleNameLabel">
+                   <property name="text">
+                    <string>Tussenvoegsel:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="middleNameInput"/>
+                 </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="lastNameLabel">
                    <property name="text">
@@ -224,22 +259,26 @@
                  <item row="2" column="1">
                   <widget class="QLineEdit" name="lastNameInput"/>
                  </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="bsnLabel">
+                   <property name="text">
+                    <string>BSN:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QSpinBox" name="bsnInput">
+                   <property name="maximum">
+                    <number>999999999</number>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="4" column="0">
                   <widget class="QPushButton" name="generateInvite">
                    <property name="text">
                     <string>Genereer QR code</string>
                    </property>
                   </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="middleNameLabel">
-                   <property name="text">
-                    <string>Tussenvoegsel:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="middleNameInput"/>
                  </item>
                  <item row="5" column="0" colspan="2">
                   <widget class="QLabel" name="connLabel">
@@ -254,20 +293,6 @@
                    </property>
                    <property name="text">
                     <string/>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="bsnLabel">
-                   <property name="text">
-                    <string>BSN:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QSpinBox" name="bsnInput">
-                   <property name="maximum">
-                    <number>999999999</number>
                    </property>
                   </widget>
                  </item>

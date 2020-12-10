@@ -19,13 +19,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Create API Handler instance with default ip and port
         self.api = ApiHandler("localhost", 7001)
         # Disable the patient tabs on startup
-        self.__disablePatientTabs()
+        self.__patientTabsEnabled(False)
 
         #####################
         #  State variables  #
         #####################
         # List of active connection aliases
         self.activeAliases = self.__getActiveConnectionAliases()
+        # Fill the patient selection box
+        self.__fillPatientSelectionBox(self.activeAliases)
         # Temp dir for images and misc stuff will be removed when program closes
         self.tempDir = tempfile.TemporaryDirectory()
         # Keep track of the current alias
@@ -38,7 +40,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.clockTimer = QtCore.QTimer(self)
         self.clockTimer.timeout.connect(self.__showTime)
         self.clockTimer.start(1)  # Update the time (almost) instant upon start
-
         # Create timer for greetings text
         self.greetingsTimer = QtCore.QTimer(self)
         self.greetingsTimer.timeout.connect(self.__updateGreetings)
@@ -51,6 +52,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.generateInvite.clicked.connect(self.onGenerateInviteClicked)
         # Set handler for settings button
         self.actionInstellingen.triggered.connect(self.onSettingsMenuClicked)
+        # Set handler for select patient
+        self.confirmPatientBtn.clicked.connect(self.onSelectPatientClicked)
 
     def __del__(self):
         self.tempDir.cleanup()
@@ -79,12 +82,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 aliases.append(connection["alias"])
         return aliases
 
-    def __showTime(self):
+    def __showTime(self) -> None:
         time = QtCore.QTime.currentTime()
         self.lcdClock.display(time.toString("hh:mm"))
         self.clockTimer.setInterval(1000)  # Set the interval to update the time every second
 
-    def __updateGreetings(self):
+    def __updateGreetings(self) -> None:
         # Check if there is an valid connection and then get the agent name
         if self.api.test_connection():
             agent = self.api.get_agent_name().replace("_", " ")
@@ -104,17 +107,29 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.welcomeLabel.setText(f"{greeting} {agent}")
         self.greetingsTimer.setInterval(60000)  # Set the interval to only check every minute
 
-    def __disablePatientTabs(self):
+    def __patientTabsEnabled(self, state: bool) -> None:
         for i in range(1, self.tabWidget.count()):
-            self.tabWidget.setTabEnabled(i, False)
+            self.tabWidget.setTabEnabled(i, state)
 
-    def onSettingsMenuClicked(self):
+    def __fillPatientSelectionBox(self, patients: list) -> None:
+        self.selectPatientBox.clear()
+        self.selectPatientBox.addItems(sorted(patients, key=str.lower))
+
+    def onSettingsMenuClicked(self) -> None:
         print("Clicked settings")
         settings_dialog = Settings(self.api)
         settings_dialog.exec_()
         print("Settings menu closed")
 
-    def onGenerateInviteClicked(self):
+    def onSelectPatientClicked(self) -> None:
+        print("Clicked on select patient")
+        alias = self.selectPatientBox.currentText()
+        if not alias:
+            print("No patient selected")
+            return
+        print(f"Alias: {alias}")
+
+    def onGenerateInviteClicked(self) -> None:
         print("Clicked on generate invite")
         self.connLabel.setText("")  # Reset the conn label when button is pressed
         f_name = self.nameInput.text()
