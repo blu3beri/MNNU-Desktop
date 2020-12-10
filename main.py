@@ -15,6 +15,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         # TODO: Create config file to save certain properties like the ACA-PY instance port/ip
+        # Docs: https://doc.qt.io/qt-5/qsettings.html
 
         # Create API Handler instance with default ip and port
         self.api = ApiHandler("localhost", 7001)
