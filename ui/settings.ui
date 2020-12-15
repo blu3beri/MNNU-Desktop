@@ -14,7 +14,57 @@
    <string>MNNU-Desktop instellingen</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="professionGroupBox">
+     <property name="title">
+      <string>Zorgverlener</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="professionLabel">
+        <property name="text">
+         <string>Beroep:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="professionComboBox">
+        <item>
+         <property name="text">
+          <string>--- Selecteer beroep ---</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>CVA verpleegkundige</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Ergotherapeut</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Fysiotherapeut</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Logopedist</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Maatschappelijk werker</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -24,7 +74,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>ACA-PY</string>
