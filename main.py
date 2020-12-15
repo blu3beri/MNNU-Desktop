@@ -5,6 +5,7 @@ import qrcode
 import tempfile
 import uuid
 import re
+import logging
 
 from ui.MainWindow import Ui_MainWindow
 from settings import Settings
@@ -17,6 +18,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         # TODO: Create config file to save certain properties like the ACA-PY instance port/ip
         # Docs: https://doc.qt.io/qt-5/qsettings.html
+
+        # Setup logger
+        logging.basicConfig(filename="MNNU-Desktop.log", level=logging.INFO)
+        logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
+        logging.info("Logging started...")
 
         # Create API Handler instance with default ip and port
         self.api = ApiHandler("localhost", 7001)
@@ -109,25 +115,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.__patientTabsEnabled(False)
 
     def onSettingsMenuClicked(self) -> None:
-        print("Clicked settings")
+        logging.info("Clicked settings")
         settings_dialog = Settings(self.api)
         settings_dialog.exec_()
-        print("Settings menu closed")
+        logging.info("Settings menu closed")
 
     def onSelectPatientClicked(self) -> None:
-        print("Clicked on select patient")
+        logging.info("Clicked on select patient")
         alias = self.selectPatientBox.currentText()
         if not alias or self.selectPatientBox.currentIndex() == 0:
-            print("No patient selected")
+            logging.info("No patient selected")
             self.__patientTabsEnabled(False)
             return
         # Enable the patient tabs since a patient is selected
         self.__patientTabsEnabled(True)
-        print(f"Selected alias: {alias}")
+        logging.info(f"Selected alias: {alias}")
         # TODO: Fill in all the available patient information in their corresponding tab
 
     def onDeletePatientClicked(self) -> None:
-        print("Clicked on delete patient")
+        logging.info("Clicked on delete patient")
         alias = self.selectPatientBox.currentText()
         if not alias or self.selectPatientBox.currentIndex() == 0:
             return
@@ -137,9 +143,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                      QMessageBox.Yes | QMessageBox.No
                                      )
         if action == QMessageBox.Yes:
-            print(f"Deleting connection with alias: {alias}")
+            logging.info(f"Deleting connection with alias: {alias}")
             if not self.api.delete_connection(self.api.get_connection_id(alias)):
-                print("Unable to delete connection with given alias")
+                logging.warning("Unable to delete connection with given alias")
             # Refresh the active connection box list
             self.__fillPatientSelectionBox(self.api.get_active_connection_aliases())
         else:
@@ -147,7 +153,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
 
     def onGenerateInviteClicked(self) -> None:
-        print("Clicked on generate invite")
+        logging.info("Clicked on generate invite")
         self.connLabel.setText("")  # Reset the conn label when button is pressed
         f_name = self.nameInput.text()
         m_name = self.middleNameInput.text()
@@ -155,21 +161,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         bsn = self.bsnInput.text()
         # Check if at least fist_name and last_name are filled in
         if not f_name or not l_name:
-            print("First name and/or last name is empty")
+            logging.warning("First name and/or last name is empty")
             self.connLabel.setText("Voornaam en/of achternaam is leeg")
             return
         elif not re.match(r"^[0-9]{9}$", bsn):
-            print("BSN is empty")
+            logging.warning("BSN is empty")
             self.connLabel.setText("BSN is leeg of klopt niet")
             return
         # Generate invitation url
         if self.api.test_connection():
             alias = f"{f_name} {m_name + ' ' if m_name else ''}{l_name} {bsn}"
-            print(f"The following input was given: {alias}")
+            logging.info(f"The following input was given: {alias}")
             # Check if a connection with this alias already exists
             conn = self.api.get_connections(alias=alias)["results"]
             if len(conn):
-                print("Connection already exists with this alias")
+                logging.warning("Connection already exists with this alias")
                 self.connLabel.setText(f"Er bestaat al een connectie met deze naam\n"
                                        f"De status van deze connectie is: {conn[0]['state']}")
                 return  # Don't execute the rest of the code since we don't want duplicates
@@ -178,13 +184,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 alias=alias,
                 multi_use=False,
                 auto_accept=False)
-            print(f"Generated invite: {invite}")
+            logging.info(f"Generated invite: {invite}")
             self.qrCodeLabel.setPixmap(QtGui.QPixmap(self.__createInviteQr(invite=invite)).scaled(224, 224))
             # TODO: Check QT docs on how to scale the image properly, remove qr when connection is established
             return
         self.connLabel.setText("Geen verbinding mogelijk met ACA-PY.\n"
                                "Staat de server aan en is de juiste ip/poort ingesteld?")
-        print("Connection to ACA-PY failed, is the instance running and are the correct ip/port specified?")
+        logging.warning("Connection to ACA-PY failed, is the instance running and are the correct ip/port specified?")
 
 
 if __name__ == "__main__":
