@@ -69,7 +69,7 @@
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="homepage">
        <property name="sizePolicy">
@@ -464,7 +464,18 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QComboBox" name="recordTypeBox"/>
+               <widget class="QComboBox" name="recordTypeBox">
+                <item>
+                 <property name="text">
+                  <string>--- Selecteer type ---</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>NAW</string>
+                 </property>
+                </item>
+               </widget>
               </item>
               <item row="1" column="0">
                <widget class="QPushButton" name="sendRequestBtn">

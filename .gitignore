@@ -2,3 +2,4 @@
 __pycache__/
 ui/*.py
 resource_rc.py
+*.log
