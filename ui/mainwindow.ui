@@ -211,6 +211,13 @@
                 </property>
                </widget>
               </item>
+              <item>
+               <widget class="QPushButton" name="deletePatientBtn">
+                <property name="text">
+                 <string>Verwijder</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
            </item>

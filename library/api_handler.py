@@ -26,6 +26,7 @@ states = {
 
 
 # TODO: Check if this class can be ran inside a separate thread so the program doesn't hang when the ACA-PY is offline
+# TODO: Add docstrings to functions
 class ApiHandler:
     def __init__(self, api_url: str, port: int):
         self.__api_url = f"http://{api_url}:{port}"
@@ -84,6 +85,29 @@ class ApiHandler:
         if state:
             params["state"] = state
         return requests.get(f"{self.__api_url}/connections", params=params).json()
+
+    def get_connection_id(self, alias: str) -> str:
+        return self.get_connections(alias=alias)["results"][0]["connection_id"]
+
+    def get_active_connection_aliases(self) -> list:
+        aliases = []
+        # If there is no active connection, return an empty list
+        if not self.test_connection():
+            return aliases
+        connections = self.get_connections(state="active")["results"]
+        for connection in connections:
+            # Check if the connection actually has an alias
+            if "alias" not in connection:
+                continue
+            else:
+                aliases.append(connection["alias"])
+        return aliases
+
+    def delete_connection(self, conn_id: str) -> bool:
+        response = requests.delete(f"{self.__api_url}{endpoints['base_connections']}{conn_id}")
+        if response.status_code == 200:
+            return True
+        return False
 
     def create_schema(self, schema_name: str, schema_version: str, attributes: list) -> dict:
         schema = {

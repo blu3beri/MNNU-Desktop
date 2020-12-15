@@ -25,10 +25,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         #####################
         #  State variables  #
         #####################
-        # List of active connection aliases
-        self.activeAliases = self.__getActiveConnectionAliases()
         # Fill the patient selection box
-        self.__fillPatientSelectionBox(self.activeAliases)
+        self.__fillPatientSelectionBox(self.api.get_active_connection_aliases())
         # Temp dir for images and misc stuff will be removed when program closes
         self.tempDir = tempfile.TemporaryDirectory()
         # Keep track of the current alias
@@ -55,6 +53,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionInstellingen.triggered.connect(self.onSettingsMenuClicked)
         # Set handler for select patient
         self.confirmPatientBtn.clicked.connect(self.onSelectPatientClicked)
+        # Set handler for delete patient
+        self.deletePatientBtn.clicked.connect(self.onDeletePatientClicked)
 
     def __del__(self):
         self.tempDir.cleanup()
@@ -68,20 +68,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         filename = f"{self.tempDir.name}/{uuid.uuid4().hex}.png"
         img.save(filename)
         return filename
-
-    def __getActiveConnectionAliases(self) -> list:
-        aliases = []
-        # If there is no active connection, return an empty list
-        if not self.api.test_connection():
-            return aliases
-        connections = self.api.get_connections(state="active")["results"]
-        for connection in connections:
-            # Check if the connection actually has an alias
-            if "alias" not in connection:
-                continue
-            else:
-                aliases.append(connection["alias"])
-        return aliases
 
     def __showTime(self) -> None:
         time = QtCore.QTime.currentTime()
@@ -117,6 +103,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.selectPatientBox.clear()
         self.selectPatientBox.addItems(patients)
         self.selectPatientBox.setCurrentIndex(0)
+        # If the patientBox is empty eq 1 disable the patient tabs
+        if self.selectPatientBox.count() == 1:
+            self.__patientTabsEnabled(False)
 
     def onSettingsMenuClicked(self) -> None:
         print("Clicked settings")
@@ -136,6 +125,26 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         print(f"Selected alias: {alias}")
         # TODO: Fill in all the available patient information in their corresponding tab
 
+    def onDeletePatientClicked(self) -> None:
+        print("Clicked on delete patient")
+        alias = self.selectPatientBox.currentText()
+        if not alias or self.selectPatientBox.currentIndex() == 0:
+            return
+        action = QtWidgets.QMessageBox.warning(self,
+                                               'Verwijder connectie',
+                                               f"Weet je zeker dat je de connnectie met {alias} wilt verwijderen?",
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
+                                               )
+        if action == QtWidgets.QMessageBox.Yes:
+            print(f"Deleting connection with alias: {alias}")
+            if not self.api.delete_connection(self.api.get_connection_id(alias)):
+                print("Unable to delete connection with given alias")
+            # Refresh the active connection box list
+            self.__fillPatientSelectionBox(self.api.get_active_connection_aliases())
+        else:
+            # User pressed No, do nothing
+            return
+
     def onGenerateInviteClicked(self) -> None:
         print("Clicked on generate invite")
         self.connLabel.setText("")  # Reset the conn label when button is pressed
@@ -154,7 +163,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             return
         # Generate invitation url
         if self.api.test_connection():
-            alias = f"{f_name} {m_name+' ' if m_name else ''}{l_name} {bsn}"
+            alias = f"{f_name} {m_name + ' ' if m_name else ''}{l_name} {bsn}"
             print(f"The following input was given: {alias}")
             # Check if a connection with this alias already exists
             conn = self.api.get_connections(alias=alias)["results"]
