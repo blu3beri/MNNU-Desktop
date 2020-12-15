@@ -1,5 +1,6 @@
 import sys
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QApplication
 import qrcode
 import tempfile
 import uuid
@@ -10,7 +11,7 @@ from settings import Settings
 from library.api_handler import ApiHandler
 
 
-class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
@@ -130,12 +131,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         alias = self.selectPatientBox.currentText()
         if not alias or self.selectPatientBox.currentIndex() == 0:
             return
-        action = QtWidgets.QMessageBox.warning(self,
-                                               'Verwijder connectie',
-                                               f"Weet je zeker dat je de connnectie met {alias} wilt verwijderen?",
-                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
-                                               )
-        if action == QtWidgets.QMessageBox.Yes:
+        action = QMessageBox.warning(self,
+                                     'Verwijder connectie',
+                                     f"Weet je zeker dat je de connnectie met {alias} wilt verwijderen?",
+                                     QMessageBox.Yes | QMessageBox.No
+                                     )
+        if action == QMessageBox.Yes:
             print(f"Deleting connection with alias: {alias}")
             if not self.api.delete_connection(self.api.get_connection_id(alias)):
                 print("Unable to delete connection with given alias")
@@ -187,7 +188,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
