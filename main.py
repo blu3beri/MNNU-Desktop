@@ -121,6 +121,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings_dialog = Settings(self.api)
         settings_dialog.exec_()
         logging.info("Settings menu closed")
+        profession = settings_dialog.professionComboBox.currentText()
+        if not profession or settings_dialog.professionComboBox.currentIndex() == 0:
+            logging.info("No profession selected")
+            return
+        logging.info(f"Selected profession: {profession}")
+        # TODO: Save medical profession
 
     def onSelectPatientClicked(self) -> None:
         logging.info("Clicked on select patient")
