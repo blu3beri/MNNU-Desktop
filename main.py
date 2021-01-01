@@ -62,6 +62,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.confirmPatientBtn.clicked.connect(self.onSelectPatientClicked)
         # Set handler for delete patient
         self.deletePatientBtn.clicked.connect(self.onDeletePatientClicked)
+        # Set handler for request records
+        self.sendRequestBtn.clicked.connect(self.onSendRequestClicked)
 
     def __del__(self):
         self.tempDir.cleanup()
@@ -126,9 +128,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not alias or self.selectPatientBox.currentIndex() == 0:
             logging.info("No patient selected")
             self.__patientTabsEnabled(False)
+            self.currentAlias = None
             return
         # Enable the patient tabs since a patient is selected
         self.__patientTabsEnabled(True)
+        self.currentAlias = alias
         logging.info(f"Selected alias: {alias}")
         # TODO: Fill in all the available patient information in their corresponding tab
 
@@ -191,6 +195,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.connLabel.setText("Geen verbinding mogelijk met ACA-PY.\n"
                                "Staat de server aan en is de juiste ip/poort ingesteld?")
         logging.warning("Connection to ACA-PY failed, is the instance running and are the correct ip/port specified?")
+
+    def onSendRequestClicked(self):
+        requested_record = self.recordTypeBox.currentText()
+        if not requested_record or self.recordTypeBox.currentIndex() == 0:
+            logging.info("No record selected")
+            return
+        conn_id = self.api.get_connection_id(self.currentAlias)
+        logging.info(
+            f"Requested record type:{requested_record} to connection alias:{self.currentAlias} with conn id:{conn_id}"
+        )
+        # TODO: Send proof request to the connection id with the schema corresponding to requested_record
 
 
 if __name__ == "__main__":
