@@ -16,7 +16,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
-        # TODO: Create config file to save certain properties like the ACA-PY instance port/ip
+        # TODO: Create config file to save certain properties like the ACA-PY instance port/ip and medical profession
         # Docs: https://doc.qt.io/qt-5/qsettings.html
 
         # Setup logger
