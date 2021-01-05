@@ -10,6 +10,7 @@ import logging
 from ui.MainWindow import Ui_MainWindow
 from settings import Settings
 from library.api_handler import ApiHandler
+from credentials.schema_attributes import naw
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -25,9 +26,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         logging.info("Logging started...")
 
         # Create API Handler instance with default ip and port
+        # TODO: Read ip and port from config if exists, otherwise use default values
         self.api = ApiHandler("localhost", 7001)
         # Disable the patient tabs on startup
         self.__patientTabsEnabled(False)
+
+        # Configure available schemas
+        self.schemas = {"naw": naw, }
 
         #####################
         #  State variables  #
@@ -65,6 +70,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Set handler for request records
         self.sendRequestBtn.clicked.connect(self.onSendRequestClicked)
 
+        #############################
+        #     Credential checks     #
+        #############################
+        # Check if the schemas are created and up-to-date
+        if self.api.test_connection():
+            self.__createSchemas(self.schemas)
+
     def __del__(self):
         self.tempDir.cleanup()
 
@@ -77,6 +89,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         filename = f"{self.tempDir.name}/{uuid.uuid4().hex}.png"
         img.save(filename)
         return filename
+
+    def __createSchemas(self, schemas: dict) -> None:
+        for key, value in schemas.items():
+            exists = False
+            for schema in self.api.get_schemas():
+                if schema.split(':')[2:] == value[0]:
+                    logging.info(f"The {key} schema exists and is up-to-date (version: {value[0][1]})")
+                    exists = True
+                    break
+            if not exists:
+                logging.info(f"The {naw} schema does not exist or is not up-to-date, creating...")
+                self.api.create_schema(schema_name=value[0][0], schema_version=value[0][1], attributes=value[1])
 
     def __showTime(self) -> None:
         time = QtCore.QTime.currentTime()

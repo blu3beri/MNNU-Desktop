@@ -118,6 +118,10 @@ class ApiHandler:
         response = requests.post(f"{self.__api_url}/schemas", json=schema)
         return response.json()['schema']
 
+    def get_schemas(self) -> list:
+        response = requests.get(f"{self.__api_url}/schemas/created").json()['schema_ids']
+        return response
+
     def create_credential_definition(self, schema_id: str, schema_tag: str, support_revocation: bool = True) -> str:
         cred_def = {
             "schema_id": schema_id,

@@ -1,0 +1,48 @@
+naw = [
+    [
+        "schema_naw",  # Schema naam
+        "1.0"  # Versie
+    ],
+    [
+        "naam",
+        "voorletters",
+        "achternaam",
+        "geslacht",
+        "geboortedatum",
+        "geboorteland",
+        "bsn",
+        "geldigheid id",
+        "burgelijke staat",
+        "telefoonnummer",
+        "email-adres",
+        "straat",
+        "huisnummer",
+        "toevoeging",
+        "postcode",
+        "woonplaats",
+        "provincie",
+        "land",
+        "polisnummer",
+        "verzekeraar",
+        "voornaam mantelzorger",
+        "tussenvoegsel mantelzorger",
+        "achternaam mantelzorger",
+        "telefoonnummer mantelzorger",
+        "mobielnummer mantelzorger",
+        "email-adres mantelzorger",
+        "voornaam contactpersoon",
+        "tussenvoegsel contactpersoon",
+        "achternaam contactpersoon",
+        "telefoonnummer contactpersoon",
+        "mobielnummer contactpersoon",
+        "email-adres contactpersoon",
+        "naam huisarts",
+        "straat huisarts",
+        "huisnnummer huisarts",
+        "toevoeging huisarts",
+        "telefoonnummer huisarts",
+        "agb-code huisarts",
+        "uzi-nummer huisarts",
+        "email-adres huisarts"
+    ]
+]
