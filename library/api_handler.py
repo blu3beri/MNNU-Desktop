@@ -171,21 +171,33 @@ class ApiHandler:
         response = requests.get(f"{self.__api_url}{endpoints['get_credentials']}")
         return response.json()
 
-    def send_proof_request(self, conn_id: str, requested_attributes: dict, requested_predicates: dict, comment) -> str:
+    def send_proof_request(self, conn_id: str, requested_attributes: dict, requested_predicates: dict, name: str, comment: str) -> str:
         proposal = {
             "comment": comment,
             "connection_id": conn_id,
             "proof_request": {
-                "name": "Proof request",
+                "name": name,
                 "requested_attributes": requested_attributes,
                 "requested_predicates": requested_predicates,
                 "version": "1.0"
             },
             "trace": "false"
         }
-
         response = requests.post(f"{self.__api_url}{endpoints['send_proposal']}", json=proposal)
         return response.json()['presentation_exchange_id']
+
+    def get_pending_proof_requests_send(self):
+        pending_req = []
+        params = {"role": "verifier", "state": "request_sent"}
+        response = requests.get(f"{self.__api_url}{endpoints['base_proof']}", params=params).json()["results"]
+        for i in response:
+            pending_req.append({
+                "name": i["presentation_request"]["name"],
+                "connection_id": i["connection_id"],
+                "presentation_exchange_id": i["presentation_exchange_id"],
+                "date_created": i["created_at"]
+            })
+        return pending_req
 
     def get_pres_exchange_id(self):
         response = requests.get(f"{self.__api_url}{endpoints['base_proof']}")

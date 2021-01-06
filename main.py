@@ -33,7 +33,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.__patientTabsEnabled(False)
 
         # Configure available schemas
-        self.schemas = {"naw": naw, }
+        self.schemas = {"NAW": naw, }
 
         #####################
         #  State variables  #
@@ -220,15 +220,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 multi_use=False,
                 auto_accept=False)
             logging.info(f"Generated invite: {invite}")
-            self.qrCodeLabel.setPixmap(QtGui.QPixmap(self.__createInviteQr(invite=invite)).scaled(224, 224))
             # TODO: Check QT docs on how to scale the image properly, remove qr when connection is established
+            self.qrCodeLabel.setPixmap(QtGui.QPixmap(self.__createInviteQr(invite=invite)).scaled(224, 224))
             return
         self.connLabel.setText("Geen verbinding mogelijk met ACA-PY.\n"
                                "Staat de server aan en is de juiste ip/poort ingesteld?")
         logging.warning("Connection to ACA-PY failed, is the instance running and are the correct ip/port specified?")
 
     def onSendRequestClicked(self):
-        requested_record = self.recordTypeBox.currentText().lower()
+        requested_record = self.recordTypeBox.currentText()
         reason = self.reasonText.toPlainText()
         if not requested_record or self.recordTypeBox.currentIndex() == 0:
             logging.info("No record selected")
@@ -241,6 +241,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             conn_id=conn_id,
             requested_attributes=generate_requested_attributes(self.schemas[requested_record]),
             requested_predicates={},
+            name=requested_record,
             comment=reason if reason else "Geen reden opgegeven"
         )
 
