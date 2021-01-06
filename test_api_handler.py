@@ -91,7 +91,8 @@ if __name__ == "__main__":
     desktop_pres_ex_id = desktop.send_proof_request(
         conn_id=desktop_conn_id,
         requested_attributes={"score_attrs":{"name":"score", "restrictions": [{"schema_name":schema_name, "schema_version": schema_version}]}},
-        requested_predicates={"high_score_pred":{"name":"high_score", "p_type": ">=", "p_value":250, "restrictions": [{"schema_name":schema_name, "schema_version": schema_version}]}}
+        requested_predicates={"high_score_pred":{"name":"high_score", "p_type": ">=", "p_value":250, "restrictions": [{"schema_name":schema_name, "schema_version": schema_version}]}},
+        comment="No comment"
     )
     print(f"desktop -> presentation exchange id: {desktop_pres_ex_id}")
 

@@ -1,7 +1,7 @@
 naw = [
     [
-        "schema_naw",  # Schema naam
-        "1.0"  # Versie
+        "schema_naw",  # Schema name
+        "1.0"  # version
     ],
     [
         "naam",

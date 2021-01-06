@@ -171,12 +171,12 @@ class ApiHandler:
         response = requests.get(f"{self.__api_url}{endpoints['get_credentials']}")
         return response.json()
 
-    def send_proof_request(self, conn_id: str, requested_attributes: dict, requested_predicates: dict) -> str:
+    def send_proof_request(self, conn_id: str, requested_attributes: dict, requested_predicates: dict, comment) -> str:
         proposal = {
-            "comment": "Ik wil proof",
+            "comment": comment,
             "connection_id": conn_id,
             "proof_request": {
-                "name": "Het AIVD wil je locatie weten",
+                "name": "Proof request",
                 "requested_attributes": requested_attributes,
                 "requested_predicates": requested_predicates,
                 "version": "1.0"

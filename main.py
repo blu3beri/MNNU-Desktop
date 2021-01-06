@@ -11,6 +11,7 @@ from ui.MainWindow import Ui_MainWindow
 from settings import Settings
 from library.api_handler import ApiHandler
 from credentials.schema_attributes import naw
+from helpers.requested_attribute_generator import generate_requested_attributes
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -227,7 +228,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         logging.warning("Connection to ACA-PY failed, is the instance running and are the correct ip/port specified?")
 
     def onSendRequestClicked(self):
-        requested_record = self.recordTypeBox.currentText()
+        requested_record = self.recordTypeBox.currentText().lower()
+        reason = self.reasonText.toPlainText()
         if not requested_record or self.recordTypeBox.currentIndex() == 0:
             logging.info("No record selected")
             return
@@ -235,7 +237,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         logging.info(
             f"Requested record type:{requested_record} to connection alias:{self.currentAlias} with conn id:{conn_id}"
         )
-        # TODO: Send proof request to the connection id with the schema corresponding to requested_record
+        self.api.send_proof_request(
+            conn_id=conn_id,
+            requested_attributes=generate_requested_attributes(self.schemas[requested_record]),
+            requested_predicates={},
+            comment=reason if reason else "Geen reden opgegeven"
+        )
 
 
 if __name__ == "__main__":
