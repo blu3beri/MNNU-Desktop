@@ -166,6 +166,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.currentAlias = alias
         logging.info(f"Selected alias: {alias}")
         # TODO: Fill in all the available patient information in their corresponding tab
+        print(self.api.get_verified_proof_records(self.api.get_connection_id(self.currentAlias)))
 
     def onDeletePatientClicked(self) -> None:
         logging.info("Clicked on delete patient")
