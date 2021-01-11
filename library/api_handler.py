@@ -186,7 +186,7 @@ class ApiHandler:
         response = requests.post(f"{self.__api_url}{endpoints['send_proposal']}", json=proposal)
         return response.json()['presentation_exchange_id']
 
-    def get_pending_proof_requests_send(self):
+    def get_pending_proof_requests_send(self) -> list:
         pending_req = []
         params = {"role": "verifier", "state": "request_sent"}
         response = requests.get(f"{self.__api_url}{endpoints['base_proof']}", params=params).json()["results"]
@@ -198,6 +198,19 @@ class ApiHandler:
                 "date_created": i["created_at"]
             })
         return pending_req
+
+    def get_verified_proof_records(self, conn_id: str) -> list:
+        records = []
+        params = {
+            "connection_id": conn_id,
+            "state": "verified",
+            "role": "verifier"
+        }
+        response = requests.get(f"{self.__api_url}{endpoints['base_proof']}", params=params).json()["results"]
+        for result in response:
+            revealed_attrs = result["presentation"]["proof"]["proofs"][0]["primary_proof"]["eq_proof"]["revealed_attrs"]
+            print(revealed_attrs)
+        return records
 
     def get_pres_exchange_id(self):
         response = requests.get(f"{self.__api_url}{endpoints['base_proof']}")
