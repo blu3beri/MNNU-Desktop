@@ -1,6 +1,6 @@
 naw = {
-    "schema_name": "schema_naw",  # Schema name
-    "schema_version": "1.0",  # version
+    "schema_name": "naw",
+    "schema_version": "1.0",
     "attributes": [
         "naam",
         "voorletters",
