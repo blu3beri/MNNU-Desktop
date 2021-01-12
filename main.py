@@ -102,6 +102,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if not exists:
                 logging.info(f"The {key} schema does not exist or is not up-to-date, creating...")
                 self.api.create_schema(schema=schema)
+        logging.info("All schemas are up-to-date and created!")
 
     def __showTime(self) -> None:
         time = QtCore.QTime.currentTime()
@@ -238,14 +239,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         logging.info(
             f"Requested record type:{requested_record} to connection alias:{self.currentAlias} with conn id:{conn_id}"
         )
-        pres_ex_id = self.api.send_proof_request(
+        self.api.send_proof_request(
             conn_id=conn_id,
             requested_attributes=generate_requested_attributes(self.schemas[requested_record]),
             requested_predicates={},
             name=requested_record,
             comment=reason if reason else "Geen reden opgegeven"
         )
-        print(f"Press exchange id: {pres_ex_id}")
 
 
 if __name__ == "__main__":
