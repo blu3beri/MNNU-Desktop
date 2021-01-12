@@ -109,12 +109,7 @@ class ApiHandler:
             return True
         return False
 
-    def create_schema(self, schema_name: str, schema_version: str, attributes: list) -> dict:
-        schema = {
-            "attributes": attributes,
-            "schema_name": schema_name,
-            "schema_version": schema_version
-        }
+    def create_schema(self, schema: dict) -> dict:
         response = requests.post(f"{self.__api_url}/schemas", json=schema)
         return response.json()['schema']
 

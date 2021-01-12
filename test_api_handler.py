@@ -46,11 +46,15 @@ if __name__ == "__main__":
     print("-"*50)
 
     # Create schema
-    schema = desktop.create_schema(
-        schema_name=schema_name,
-        schema_version=schema_version,
-        attributes=["score", "high_score"]
-    )
+    new_schema = {
+        "schema_name": schema_name,
+        "schema_version": schema_version,
+        "attributes": [
+            "score",
+            "high_score"
+        ]
+    }
+    schema = desktop.create_schema(schema=new_schema)
     print(f"desktop -> schema id: {schema['id']}")
 
     print("-"*50)

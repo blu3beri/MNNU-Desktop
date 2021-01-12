@@ -1,9 +1,7 @@
-naw = [
-    [
-        "schema_naw",  # Schema name
-        "1.0"  # version
-    ],
-    [
+naw = {
+    "schema_name": "schema_naw",  # Schema name
+    "schema_version": "1.0",  # version
+    "attributes": [
         "naam",
         "voorletters",
         "achternaam",
@@ -11,8 +9,8 @@ naw = [
         "geboortedatum",
         "geboorteland",
         "bsn",
-        "geldigheid id",
-        "burgelijke staat",
+        "geldigheid_id",
+        "burgelijke_staat",
         "telefoonnummer",
         "email-adres",
         "straat",
@@ -24,25 +22,25 @@ naw = [
         "land",
         "polisnummer",
         "verzekeraar",
-        "voornaam mantelzorger",
-        "tussenvoegsel mantelzorger",
-        "achternaam mantelzorger",
-        "telefoonnummer mantelzorger",
-        "mobielnummer mantelzorger",
-        "email-adres mantelzorger",
-        "voornaam contactpersoon",
-        "tussenvoegsel contactpersoon",
-        "achternaam contactpersoon",
-        "telefoonnummer contactpersoon",
-        "mobielnummer contactpersoon",
-        "email-adres contactpersoon",
-        "naam huisarts",
-        "straat huisarts",
-        "huisnnummer huisarts",
-        "toevoeging huisarts",
-        "telefoonnummer huisarts",
-        "agb-code huisarts",
-        "uzi-nummer huisarts",
-        "email-adres huisarts"
+        "voornaam_mantelzorger",
+        "tussenvoegsel_mantelzorger",
+        "achternaam_mantelzorger",
+        "telefoonnummer_mantelzorger",
+        "mobielnummer_mantelzorger",
+        "email-adres_mantelzorger",
+        "voornaam_contactpersoon",
+        "tussenvoegsel_contactpersoon",
+        "achternaam_contactpersoon",
+        "telefoonnummer_contactpersoon",
+        "mobielnummer_contactpersoon",
+        "email-adres_contactpersoon",
+        "naam_huisarts",
+        "straat_huisarts",
+        "huisnnummer_huisarts",
+        "toevoeging_huisarts",
+        "telefoonnummer_huisarts",
+        "agb-code_huisarts",
+        "uzi-nummer_huisarts",
+        "email-adres_huisarts"
     ]
-]
+}

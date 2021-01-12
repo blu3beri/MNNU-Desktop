@@ -92,16 +92,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return filename
 
     def __createSchemas(self, schemas: dict) -> None:
-        for key, value in schemas.items():
+        for key, schema in schemas.items():
             exists = False
-            for schema in self.api.get_schemas():
-                if schema.split(':')[2:] == value[0]:
-                    logging.info(f"The {key} schema exists and is up-to-date (version: {value[0][1]})")
+            for i in self.api.get_schemas():
+                if i.split(':')[2:] == [schema["schema_name"], schema["schema_version"]]:
+                    logging.info(f"The {key} schema exists and is up-to-date (version: {schema['schema_version']})")
                     exists = True
                     break
             if not exists:
-                logging.info(f"The {naw} schema does not exist or is not up-to-date, creating...")
-                self.api.create_schema(schema_name=value[0][0], schema_version=value[0][1], attributes=value[1])
+                logging.info(f"The {key} schema does not exist or is not up-to-date, creating...")
+                self.api.create_schema(schema=schema)
 
     def __showTime(self) -> None:
         time = QtCore.QTime.currentTime()
@@ -164,7 +164,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Enable the patient tabs since a patient is selected
         self.__patientTabsEnabled(True)
         self.currentAlias = alias
-        logging.info(f"Selected alias: {alias}")
+        logging.info(f"Selected alias: {alias} with conn_id: {self.api.get_connection_id(self.currentAlias)}")
         # TODO: Fill in all the available patient information in their corresponding tab
         print(self.api.get_verified_proof_records(self.api.get_connection_id(self.currentAlias)))
 
@@ -238,13 +238,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         logging.info(
             f"Requested record type:{requested_record} to connection alias:{self.currentAlias} with conn id:{conn_id}"
         )
-        self.api.send_proof_request(
+        pres_ex_id = self.api.send_proof_request(
             conn_id=conn_id,
             requested_attributes=generate_requested_attributes(self.schemas[requested_record]),
             requested_predicates={},
             name=requested_record,
             comment=reason if reason else "Geen reden opgegeven"
         )
+        print(f"Press exchange id: {pres_ex_id}")
 
 
 if __name__ == "__main__":
