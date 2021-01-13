@@ -280,10 +280,10 @@ class ApiHandler:
         :return: The send proof request json response
         """
         proposal = {
-            "comment": comment,
+            "comment": "",
             "connection_id": conn_id,
             "proof_request": {
-                "name": name,
+                "name": f"{name}:{comment}",
                 "requested_attributes": requested_attributes,
                 "requested_predicates": requested_predicates,
                 "version": "1.0"
@@ -310,13 +310,13 @@ class ApiHandler:
             })
         return pending_req
 
-    def get_verified_proof_records(self, conn_id: str) -> list:
+    def get_verified_proof_records(self, conn_id: str) -> dict:
         """
         Get a list of verified proof records
         :param conn_id: The connection id where the proof records originated from
         :return: A list with all the proof records from a given connection id
         """
-        records = []
+        records = {}
         params = {
             "connection_id": conn_id,
             "state": "verified",
@@ -324,8 +324,9 @@ class ApiHandler:
         }
         response = requests.get(f"{self.__api_url}{endpoints['base_proof']}", params=params).json()["results"]
         for result in response:
+            name = result["presentation_request"]["name"].split(":")[0]
             revealed_attrs = result["presentation"]["proof"]["proofs"][0]["primary_proof"]["eq_proof"]["revealed_attrs"]
-            print(revealed_attrs)
+            records[name] = revealed_attrs
         return records
 
     def get_pres_exchange_id(self) -> str:

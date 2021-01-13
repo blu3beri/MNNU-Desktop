@@ -56,6 +56,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.greetingsTimer = QtCore.QTimer(self)
         self.greetingsTimer.timeout.connect(self.__updateGreetings)
         self.greetingsTimer.start(1)  # Update the greeting (almost) instant upon start
+        # Create timer to fill/update the patient records
+        self.patientRecordsTimer = QtCore.QTimer(self)
+        self.patientRecordsTimer.timeout.connect(self.__updatePatientRecords)
 
         ####################
         #     Handlers     #
@@ -129,6 +132,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.welcomeLabel.setText(f"{greeting} {agent}")
         self.greetingsTimer.setInterval(60000)  # Set the interval to only check every minute
 
+    def __updatePatientRecords(self) -> None:
+        self.patientRecordsTimer.setInterval(5 * 60000)  # Change interval to only check every 5 minutes
+        records = self.api.get_verified_proof_records(self.api.get_connection_id(self.currentAlias))
+        # TODO: Make handling of all record types prettier
+        if "naw" in records:
+            self.keyNaw.clear()
+            self.valueNaw.clear()
+            for key, value in records["naw"].items():
+                self.keyNaw.addItem(key)
+                self.valueNaw.addItem(value)
+
     def __patientTabsEnabled(self, state: bool) -> None:
         for i in range(1, self.tabWidget.count()):
             self.tabWidget.setTabEnabled(i, state)
@@ -159,6 +173,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         alias = self.selectPatientBox.currentText()
         if not alias or self.selectPatientBox.currentIndex() == 0:
             logging.info("No patient selected")
+            # Disable updating of patient record tabs
+            self.patientRecordsTimer.stop()
+            # Disable the patient tabs and clear the current alias variable
             self.__patientTabsEnabled(False)
             self.currentAlias = None
             return
@@ -167,7 +184,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.currentAlias = alias
         logging.info(f"Selected alias: {alias} with conn_id: {self.api.get_connection_id(self.currentAlias)}")
         # TODO: Fill in all the available patient information in their corresponding tab
-        print(self.api.get_verified_proof_records(self.api.get_connection_id(self.currentAlias)))
+        self.patientRecordsTimer.start(1) # Do the update instantly
 
     def onDeletePatientClicked(self) -> None:
         logging.info("Clicked on delete patient")

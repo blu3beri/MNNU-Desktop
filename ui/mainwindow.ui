@@ -374,42 +374,10 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QListWidget" name="keyNaw">
-             <item>
-              <property name="text">
-               <string>Naam</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Tussenvoegsel</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Achternaam</string>
-              </property>
-             </item>
-            </widget>
+            <widget class="QListWidget" name="keyNaw"/>
            </item>
            <item>
-            <widget class="QListWidget" name="valueNaw">
-             <item>
-              <property name="text">
-               <string>Diederik</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string/>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Dieders</string>
-              </property>
-             </item>
-            </widget>
+            <widget class="QListWidget" name="valueNaw"/>
            </item>
           </layout>
          </widget>
