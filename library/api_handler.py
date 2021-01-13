@@ -274,7 +274,7 @@ class ApiHandler:
         Send a request for proof
         :param conn_id: The connection id of the connection where you wish to send the request to
         :param requested_attributes: The requested attributes where you want proof for
-        :param requested_predicates: The requests predicates where you want proof of
+        :param requested_predicates: The requests predicates where you want proof for (optional, supply empty dict)
         :param name: The name of the proof request
         :param comment: Additional information
         :return: The send proof request json response
