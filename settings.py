@@ -1,10 +1,10 @@
 from PyQt5 import QtWidgets
-from ui.settings import Ui_Dialog
+from ui.settings import Ui_SettingsDialog
 
 from library.api_handler import ApiHandler
 
 
-class Settings(QtWidgets.QDialog, Ui_Dialog):
+class Settings(QtWidgets.QDialog, Ui_SettingsDialog):
     def __init__(self, api_instance: ApiHandler, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
         self.setupUi(self)
