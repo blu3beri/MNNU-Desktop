@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/images">
+    <file>img/refresh_icon.png</file>
     <file>img/mnnu_icon.png</file>
     <file>img/MNNU-logo.png</file>
     <file>img/blank-profile-picture.png</file>

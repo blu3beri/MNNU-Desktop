@@ -206,6 +206,23 @@
                </widget>
               </item>
               <item>
+               <widget class="QPushButton" name="refreshPatientBtn">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>27</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="../resource.qrc">
+                  <normaloff>:/images/img/refresh_icon.png</normaloff>:/images/img/refresh_icon.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QPushButton" name="confirmPatientBtn">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -611,6 +628,7 @@
     <property name="title">
      <string>Verzoeken</string>
     </property>
+    <addaction name="actionOpenstaandeConnectieVerzoeken"/>
     <addaction name="actionOpenstaandeOpvraagGegevens"/>
    </widget>
    <addaction name="menuBestand"/>
@@ -625,6 +643,11 @@
   <action name="actionOpenstaandeOpvraagGegevens">
    <property name="text">
     <string>Openstaande verzoeken gegevens</string>
+   </property>
+  </action>
+  <action name="actionOpenstaandeConnectieVerzoeken">
+   <property name="text">
+    <string>Openstaande connectie verzoeken</string>
    </property>
   </action>
  </widget>

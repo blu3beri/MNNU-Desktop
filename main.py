@@ -67,6 +67,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.generateInvite.clicked.connect(self.onGenerateInviteClicked)
         # Set handler for settings button
         self.actionInstellingen.triggered.connect(self.onSettingsMenuClicked)
+        # Set handler for refresh patient
+        self.refreshPatientBtn.clicked.connect(self.onRefreshPatientClicked)
         # Set handler for select patient
         self.confirmPatientBtn.clicked.connect(self.onSelectPatientClicked)
         # Set handler for delete patient
@@ -167,6 +169,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
         logging.info(f"Selected profession: {profession}")
         # TODO: Save medical profession
+
+    def onRefreshPatientClicked(self) -> None:
+        logging.info("Clicked on refresh patient")
+        self.__fillPatientSelectionBox(self.api.get_active_connection_aliases())
 
     def onSelectPatientClicked(self) -> None:
         logging.info("Clicked on select patient")
