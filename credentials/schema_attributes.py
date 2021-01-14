@@ -10,7 +10,7 @@ naw = {
         "geboorteland",
         "bsn",
         "geldigheid_id",
-        "burgelijke_staat",
+        "burgerlijke_staat",
         "telefoonnummer",
         "email",
         "straat",

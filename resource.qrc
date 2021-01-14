@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="/images">
+    <file>img/MNNU logo hd.jpg</file>
+    <file>img/request.png</file>
+    <file>img/qr-code.png</file>
+    <file>img/select.png</file>
     <file>img/remove.png</file>
     <file>img/settings.png</file>
     <file>img/archive.png</file>

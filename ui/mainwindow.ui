@@ -106,6 +106,9 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
@@ -120,10 +123,20 @@
                   <pointsize>17</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
+                  <stylestrategy>PreferDefault</stylestrategy>
                  </font>
                 </property>
                 <property name="layoutDirection">
                  <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="autoFillBackground">
+                 <bool>false</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="locale">
+                 <locale language="Dutch" country="Netherlands"/>
                 </property>
                 <property name="text">
                  <string>Goede[morgen/middag] zorgverlener [Naam]</string>
@@ -175,6 +188,9 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
              </property>
              <property name="title">
               <string>Patiëntenbestand</string>
@@ -233,12 +249,20 @@
                 <property name="text">
                  <string>Selecteer</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="../resource.qrc">
+                  <normaloff>:/images/img/select.png</normaloff>:/images/img/select.png</iconset>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="deletePatientBtn">
                 <property name="text">
                  <string>Verwijder</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../resource.qrc">
+                  <normaloff>:/images/img/remove.png</normaloff>:/images/img/remove.png</iconset>
                 </property>
                </widget>
               </item>
@@ -308,6 +332,10 @@
                   <widget class="QPushButton" name="generateInvite">
                    <property name="text">
                     <string>Genereer QR code</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="../resource.qrc">
+                     <normaloff>:/images/img/qr-code.png</normaloff>:/images/img/qr-code.png</iconset>
                    </property>
                   </widget>
                  </item>
@@ -406,7 +434,10 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QTableWidget" name="tableWidget_2"/>
+            <widget class="QTableWidget" name="keyMedical"/>
+           </item>
+           <item>
+            <widget class="QTableWidget" name="valueMedical"/>
            </item>
           </layout>
          </widget>
@@ -473,6 +504,10 @@
                <widget class="QPushButton" name="sendRequestBtn">
                 <property name="text">
                  <string>Stuur verzoek</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../resource.qrc">
+                  <normaloff>:/images/img/request.png</normaloff>:/images/img/request.png</iconset>
                 </property>
                </widget>
               </item>

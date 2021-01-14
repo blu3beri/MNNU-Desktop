@@ -145,11 +145,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __updatePatientRecords(self) -> None:
         self.patientRecordsTimer.setInterval(5 * 60000)  # Change interval to only check every 5 minutes
         records = self.api.get_verified_proof_records(self.api.get_connection_id(self.currentAlias))
+        print(records)
         # TODO: Make handling of all record types prettier
-        if "naw" in records:
+        if "NAW" in records:
             self.keyNaw.clear()
             self.valueNaw.clear()
-            for key, value in records["naw"].items():
+            for key, value in records["NAW"].items():
                 self.keyNaw.addItem(key)
                 self.valueNaw.addItem(value)
 
@@ -203,7 +204,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.currentAlias = alias
         logging.info(f"Selected alias: {alias} with conn_id: {self.api.get_connection_id(self.currentAlias)}")
         # TODO: Fill in all the available patient information in their corresponding tab
-        self.patientRecordsTimer.start(1) # Do the update instantly
+        self.patientRecordsTimer.start(1)  # Do the update instantly
 
     def onDeletePatientClicked(self) -> None:
         logging.info("Clicked on delete patient")
