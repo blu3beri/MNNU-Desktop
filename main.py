@@ -237,7 +237,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             conn_id, invite = self.api.create_invitation(
                 alias=alias,
                 multi_use=False,
-                auto_accept=False)
+                auto_accept=True)
             logging.info(f"Generated invite: {invite}")
             # TODO: Check QT docs on how to scale the image properly, remove qr when connection is established
             self.qrCodeLabel.setPixmap(QtGui.QPixmap(self.__createInviteQr(invite=invite)).scaled(224, 224))
@@ -251,6 +251,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         reason = self.reasonText.toPlainText()
         if not requested_record or self.recordTypeBox.currentIndex() == 0:
             logging.info("No record selected")
+            self.sendRequestLabel.setStyleSheet("color: rgb(255, 0, 0);")
+            self.sendRequestLabel.setText("Er is geen type geselecteerd")
             return
         conn_id = self.api.get_connection_id(self.currentAlias)
         logging.info(
@@ -263,6 +265,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             name=requested_record,
             comment=reason if reason else "Geen reden opgegeven"
         )
+        self.sendRequestLabel.setStyleSheet("color: rgb(12, 240, 14);")
+        self.sendRequestLabel.setText("Verzoek is verstuurd")
 
 
 if __name__ == "__main__":

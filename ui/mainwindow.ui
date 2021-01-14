@@ -473,6 +473,25 @@
                 </property>
                </widget>
               </item>
+              <item row="3" column="0" colspan="2">
+               <widget class="QLabel" name="sendRequestLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>350</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
            </item>
@@ -588,12 +607,24 @@
     </property>
     <addaction name="actionInstellingen"/>
    </widget>
+   <widget class="QMenu" name="menuVerzoeken">
+    <property name="title">
+     <string>Verzoeken</string>
+    </property>
+    <addaction name="actionOpenstaandeOpvraagGegevens"/>
+   </widget>
    <addaction name="menuBestand"/>
+   <addaction name="menuVerzoeken"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionInstellingen">
    <property name="text">
     <string>Instellingen</string>
+   </property>
+  </action>
+  <action name="actionOpenstaandeOpvraagGegevens">
+   <property name="text">
+    <string>Openstaande verzoeken gegevens</string>
    </property>
   </action>
  </widget>
