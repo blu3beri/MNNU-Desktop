@@ -21,6 +21,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         # TODO: Create config file to save certain properties like the ACA-PY instance port/ip and medical profession
         # Docs: https://doc.qt.io/qt-5/qsettings.html
+        # Disable the dialog help button globally
+        QApplication.setAttribute(QtCore.Qt.AA_DisableWindowContextHelpButton)
 
         # Setup logger
         logging.basicConfig(filename="MNNU-Desktop.log", level=logging.INFO)
