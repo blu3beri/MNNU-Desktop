@@ -111,7 +111,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __showTime(self) -> None:
         time = QtCore.QTime.currentTime()
-        self.lcdClock.display(time.toString("hh:mm"))
+        if (time.second() % 2) == 0:
+            self.lcdClock.display(time.toString("hh:mm"))
+        else:
+            self.lcdClock.display(time.toString("hh mm"))
         self.clockTimer.setInterval(1000)  # Set the interval to update the time every second
 
     def __updateGreetings(self) -> None:
