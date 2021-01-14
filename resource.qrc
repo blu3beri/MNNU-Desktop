@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/images">
+    <file>img/remove.png</file>
     <file>img/settings.png</file>
     <file>img/archive.png</file>
     <file>img/connection.png</file>
