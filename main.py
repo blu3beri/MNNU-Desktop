@@ -9,6 +9,7 @@ import logging
 
 from ui.MainWindow import Ui_MainWindow
 from settings import Settings
+from connections import Connections
 from library.api_handler import ApiHandler
 from credentials.schema_attributes import naw
 from helpers.requested_attribute_generator import generate_requested_attributes
@@ -67,6 +68,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.generateInvite.clicked.connect(self.onGenerateInviteClicked)
         # Set handler for settings button
         self.actionInstellingen.triggered.connect(self.onSettingsMenuClicked)
+        # Set handler for pending connections button
+        self.actionOpenstaandeConnectieVerzoeken.triggered.connect(self.onPendingConnectionsMenuClicked)
         # Set handler for refresh patient
         self.refreshPatientBtn.clicked.connect(self.onRefreshPatientClicked)
         # Set handler for select patient
@@ -162,7 +165,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.__patientTabsEnabled(False)
 
     def onSettingsMenuClicked(self) -> None:
-        logging.info("Clicked settings")
+        logging.info("Clicked settings menu")
         settings_dialog = Settings(self.api)
         settings_dialog.exec_()
         logging.info("Settings menu closed")
@@ -172,6 +175,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
         logging.info(f"Selected profession: {profession}")
         # TODO: Save medical profession
+
+    def onPendingConnectionsMenuClicked(self) -> None:
+        logging.info("Clicked Pending Connections menu")
+        connections_dialog = Connections(self.api)
+        connections_dialog.exec()
 
     def onRefreshPatientClicked(self) -> None:
         logging.info("Clicked on refresh patient")

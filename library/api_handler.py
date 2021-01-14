@@ -172,6 +172,24 @@ class ApiHandler:
                 aliases.append(connection["alias"])
         return aliases
 
+    def get_pending_connections(self) -> list:
+        """
+        Retrieve all pending connections
+        :return: All pending connections (state=invitation) inside a list
+        """
+        pending = []
+        connections = self.get_connections(state="invitation")["results"]
+        for connection in connections:
+            # If there is no alias then we skip it
+            if "alias" not in connection:
+                continue
+            pending.append({
+                "alias": connection["alias"],
+                "created_at": connection["created_at"].split(".")[0],
+                "connection_id": connection["connection_id"]
+            })
+        return pending
+
     def delete_connection(self, conn_id: str) -> bool:
         """
         Delete the connection with a given connection id

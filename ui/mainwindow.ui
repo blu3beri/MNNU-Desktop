@@ -636,16 +636,28 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionInstellingen">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/images/img/settings.png</normaloff>:/images/img/settings.png</iconset>
+   </property>
    <property name="text">
     <string>Instellingen</string>
    </property>
   </action>
   <action name="actionOpenstaandeOpvraagGegevens">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/images/img/archive.png</normaloff>:/images/img/archive.png</iconset>
+   </property>
    <property name="text">
     <string>Openstaande verzoeken gegevens</string>
    </property>
   </action>
   <action name="actionOpenstaandeConnectieVerzoeken">
+   <property name="icon">
+    <iconset resource="../resource.qrc">
+     <normaloff>:/images/img/connection.png</normaloff>:/images/img/connection.png</iconset>
+   </property>
    <property name="text">
     <string>Openstaande connectie verzoeken</string>
    </property>
