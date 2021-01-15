@@ -208,9 +208,24 @@ class ApiHandler:
         :param conn_id: The connection id to delete
         :return: True if deletion is successful, False if not
         """
-        # TODO: Check if there are any left over present-proof records corresponding to this connecton id
-        #  (and possible other records)
+        # TODO: Check if there are any left over records corresponding to this connection id
+        # Delete proof records corresponding to the connection id
+        self.delete_proof_records(conn_id)
         response = requests.delete(f"{self.__api_url}{endpoints['base_connections']}{conn_id}")
+        if response.status_code == 200:
+            return True
+        return False
+
+    def delete_proof_records(self, conn_id: str) -> bool:
+        """
+        Delete all proof records corresponding to a certain connection id
+        :param conn_id: The connection id to delete the records of
+        :return: None
+        """
+        records = self.get_proof_records(state="", role="", conn_id=conn_id)
+        response = None
+        for record in records:
+            response = requests.delete(f"{self.__api_url}{endpoints['base_proof']}/{record['pres_ex_id']}")
         if response.status_code == 200:
             return True
         return False
@@ -356,18 +371,22 @@ class ApiHandler:
             records[name] = attributes
         return records
 
-    def get_proof_records(self, state: str, role: str = "verifier") -> list:
+    def get_proof_records(self, state: str, role: str = "verifier", conn_id: str = None) -> list:
         """
         Get all proof records with a certain state
         :param state: The state of the proof record
         :param role: The role of our client default = verifier
+        :param conn_id: Optional, retreive only records corresponding with a certain connection id
         :return: The list of proof records with that state
         """
         records = []
-        params = {
-            "state": state,
-            "role": role
-        }
+        params = {}
+        if conn_id is not None:
+            params["connection_id"] = conn_id
+        if state:
+            params["state"] = state
+        if role:
+            params["role"] = role
         response = requests.get(f"{self.__api_url}{endpoints['base_proof']}", params=params).json()["results"]
         for i in response:
             records.append({
