@@ -349,8 +349,11 @@ class ApiHandler:
         response = requests.get(f"{self.__api_url}{endpoints['base_proof']}", params=params).json()["results"]
         for result in response:
             name = result["presentation_request"]["name"].split(":")[0]
-            revealed_attrs = result["presentation"]["proof"]["proofs"][0]["primary_proof"]["eq_proof"]["revealed_attrs"]
-            records[name] = revealed_attrs
+            revealed_attrs = result["presentation"]["requested_proof"]["revealed_attrs"]
+            attributes = {}
+            for key, value in revealed_attrs.items():
+                attributes[key] = value["raw"]
+            records[name] = attributes
         return records
 
     def get_proof_records(self, state: str, role: str = "verifier") -> list:
@@ -371,7 +374,8 @@ class ApiHandler:
                 "connection_id": i["connection_id"],
                 "type": i["presentation_request"]["name"].split(":")[0],
                 "created_at": i["created_at"].split(".")[0],
-                "state": i["state"]
+                "state": i["state"],
+                "pres_ex_id": i["presentation_exchange_id"]
             })
         return records
 

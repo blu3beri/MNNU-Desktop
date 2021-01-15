@@ -30,9 +30,9 @@ class Records(QtWidgets.QDialog, Ui_PendingRecordsDialog):
         logging.info("Clicked on refresh button")
         self.__fillTable()
 
-    def __verifyButtonHandler(self, connection_id):
+    def __verifyButtonHandler(self, presentation_exchange_id: str):
         logging.info("Clicked on removeButtonHandler")
-        response = self.api.verify_presentation(connection_id)
+        response = self.api.verify_presentation(presentation_exchange_id)
         print(response)
         button = self.sender()
         if button:
@@ -54,7 +54,7 @@ class Records(QtWidgets.QDialog, Ui_PendingRecordsDialog):
                 btn.setMinimumSize(QtCore.QSize(0, 27))
                 btn.setText("Verifieer")
                 btn.setIcon(self.icon)
-                btn.clicked.connect(lambda: self.__verifyButtonHandler(item["connection_id"]))
+                btn.clicked.connect(lambda: self.__verifyButtonHandler(item["pres_ex_id"]))
                 self.tableWidget.setCellWidget(i, 4, btn)
             else:
                 self.tableWidget.setItem(i, 4, QtWidgets.QTableWidgetItem("Verzoek verstuurd"))

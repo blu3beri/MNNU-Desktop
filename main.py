@@ -1,5 +1,5 @@
 import sys
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QApplication
 import qrcode
 import tempfile
@@ -146,16 +146,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.greetingsTimer.setInterval(60000)  # Set the interval to only check every minute
 
     def __updatePatientRecords(self) -> None:
-        self.patientRecordsTimer.setInterval(5 * 60000)  # Change interval to only check every 5 minutes
+        self.patientRecordsTimer.setInterval(60000)  # Change interval to only check every minute (POC)
         records = self.api.get_verified_proof_records(self.api.get_connection_id(self.currentAlias))
-        print(records)
-        # TODO: Make handling of all record types prettier
+        # TODO: Make handling of all record types prettier and less hardcoded
+        # TODO: Reformat the records so they are back in their original order
         if "NAW" in records:
-            self.keyNaw.clear()
-            self.valueNaw.clear()
+            header = self.nawTable.horizontalHeader()
+            header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+            i = 0
+            self.nawTable.setRowCount(len(records["NAW"]))
             for key, value in records["NAW"].items():
-                self.keyNaw.addItem(key)
-                self.valueNaw.addItem(value)
+                self.nawTable.setItem(i, 0, QtWidgets.QTableWidgetItem(key))
+                self.nawTable.setItem(i, 1, QtWidgets.QTableWidgetItem(value))
+                i += 1
 
     def __patientTabsEnabled(self, state: bool) -> None:
         for i in range(1, self.tabWidget.count()):
