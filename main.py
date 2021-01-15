@@ -146,6 +146,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.greetingsTimer.setInterval(60000)  # Set the interval to only check every minute
 
     def __updatePatientRecords(self) -> None:
+        logging.info("Refreshing patient records")
         self.patientRecordsTimer.setInterval(60000)  # Change interval to only check every minute (POC)
         records = self.api.get_verified_proof_records(self.api.get_connection_id(self.currentAlias))
         # TODO: Make handling of all record types prettier and less hardcoded
