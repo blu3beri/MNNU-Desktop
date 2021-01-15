@@ -208,6 +208,8 @@ class ApiHandler:
         :param conn_id: The connection id to delete
         :return: True if deletion is successful, False if not
         """
+        # TODO: Check if there are any left over present-proof records corresponding to this connecton id
+        #  (and possible other records)
         response = requests.delete(f"{self.__api_url}{endpoints['base_connections']}{conn_id}")
         if response.status_code == 200:
             return True
@@ -252,14 +254,6 @@ class ApiHandler:
         while response.status_code != 200:
             response = requests.post(f"{self.__api_url}/credential-definitions", json=cred_def, timeout=60)
         return response.json()["credential_definition_id"]
-
-    # def create_revocation_registry(self, cred_def_id: str) -> None:
-    #    registry = {
-    #        "credential_definition_id": cred_def_id,
-    #        "max_cred_num": 1000
-    #    }
-    #    requests.post(f"{self.__api_url}{endpoints['create_registry']}", json=registry)
-    #    return None
 
     def issue_credential(self, conn_id: str, cred_def_id: str, attributes: list, schema: dict, comment: str = "") -> dict:
         """
