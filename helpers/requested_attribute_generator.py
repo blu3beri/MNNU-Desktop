@@ -5,8 +5,8 @@ def generate_requested_attributes(schema: dict) -> dict:
     :return: A dict with the requested attributes
     """
     attributes = {}
-    for i, attribute in enumerate(schema["attributes"]):
-        attributes[f"attribute{i}"] = {
+    for attribute in schema["attributes"]:
+        attributes[attribute] = {
             "name": attribute,
             "restrictions": [
                 {

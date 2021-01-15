@@ -10,6 +10,7 @@ import logging
 from ui.MainWindow import Ui_MainWindow
 from settings import Settings
 from connections import Connections
+from records import Records
 from library.api_handler import ApiHandler
 from credentials.schema_attributes import naw
 from helpers.requested_attribute_generator import generate_requested_attributes
@@ -72,6 +73,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionInstellingen.triggered.connect(self.onSettingsMenuClicked)
         # Set handler for pending connections button
         self.actionOpenstaandeConnectieVerzoeken.triggered.connect(self.onPendingConnectionsMenuClicked)
+        # Set handler for pending records button
+        self.actionOpenstaandeOpvraagGegevens.triggered.connect(self.onPendingRecordsMenuClicked)
         # Set handler for refresh patient
         self.refreshPatientBtn.clicked.connect(self.onRefreshPatientClicked)
         # Set handler for select patient
@@ -183,6 +186,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         logging.info("Clicked Pending Connections menu")
         connections_dialog = Connections(self.api)
         connections_dialog.exec()
+
+    def onPendingRecordsMenuClicked(self) -> None:
+        logging.info("Clicked Pending Records menu")
+        records_dialog = Records(self.api)
+        records_dialog.exec()
 
     def onRefreshPatientClicked(self) -> None:
         logging.info("Clicked on refresh patient")

@@ -1,7 +1,7 @@
 import requests
 import base64
 import ast
-from typing import Tuple
+from typing import Tuple, Union
 
 endpoints = {
     "create_invitation": "/connections/create-invitation",
@@ -172,6 +172,18 @@ class ApiHandler:
                 aliases.append(connection["alias"])
         return aliases
 
+    def get_alias_by_conn_id(self, conn_id: str) -> Union[str, None]:
+        """
+        Get the alias of the given connection id
+        :param conn_id: The connnection id where the alias needs to be retreived from
+        :return: The alias as a str if found, None if not
+        """
+        connections = self.get_connections(state="active")["results"]
+        for i in connections:
+            if conn_id == i["connection_id"]:
+                return i["alias"]
+        return None
+
     def get_pending_connections(self) -> list:
         """
         Retrieve all pending connections
@@ -330,9 +342,9 @@ class ApiHandler:
 
     def get_verified_proof_records(self, conn_id: str) -> dict:
         """
-        Get a list of verified proof records
+        Get a dict of verified proof records
         :param conn_id: The connection id where the proof records originated from
-        :return: A list with all the proof records from a given connection id
+        :return: A dict with all the proof records from a given connection id
         """
         records = {}
         params = {
@@ -345,6 +357,28 @@ class ApiHandler:
             name = result["presentation_request"]["name"].split(":")[0]
             revealed_attrs = result["presentation"]["proof"]["proofs"][0]["primary_proof"]["eq_proof"]["revealed_attrs"]
             records[name] = revealed_attrs
+        return records
+
+    def get_proof_records(self, state: str, role: str = "verifier") -> list:
+        """
+        Get all proof records with a certain state
+        :param state: The state of the proof record
+        :param role: The role of our client default = verifier
+        :return: The list of proof records with that state
+        """
+        records = []
+        params = {
+            "state": state,
+            "role": role
+        }
+        response = requests.get(f"{self.__api_url}{endpoints['base_proof']}", params=params).json()["results"]
+        for i in response:
+            records.append({
+                "connection_id": i["connection_id"],
+                "type": i["presentation_request"]["name"].split(":")[0],
+                "created_at": i["created_at"].split(".")[0],
+                "state": i["state"]
+            })
         return records
 
     def get_pres_exchange_id(self) -> str:
