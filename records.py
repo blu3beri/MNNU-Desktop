@@ -46,6 +46,9 @@ class Records(QtWidgets.QDialog, Ui_PendingRecordsDialog):
         self.tableWidget.setRowCount(len(all_records))
         # Fill the table with the received presentations first
         for i, item in enumerate(all_records):
+            alias = self.api.get_alias_by_conn_id(conn_id=item["connection_id"])
+            if alias is None:
+                continue
             if item["state"] == "presentation_received":
                 btn = QtWidgets.QPushButton(self.tableWidget)
                 btn.setMinimumSize(QtCore.QSize(0, 27))
@@ -55,7 +58,6 @@ class Records(QtWidgets.QDialog, Ui_PendingRecordsDialog):
                 self.tableWidget.setCellWidget(i, 4, btn)
             else:
                 self.tableWidget.setItem(i, 4, QtWidgets.QTableWidgetItem("Verzoek verstuurd"))
-            alias = self.api.get_alias_by_conn_id(conn_id=item["connection_id"])
             name = " ".join(alias.split(" ")[:2])
             bsn = alias.split(" ")[2]
             date = datetime.fromisoformat(item["created_at"]).strftime("%d %B %Y om %H:%M")
