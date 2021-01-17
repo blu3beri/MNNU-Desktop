@@ -145,22 +145,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.welcomeLabel.setText(f"{greeting} {agent}")
         self.greetingsTimer.setInterval(60000)  # Set the interval to only check every minute
 
+    @staticmethod
+    def __fillRecordTable(table: QtWidgets.QTableWidget, records: dict):
+        header = table.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        i = 0
+        table.setRowCount(len(records))
+        for key, value in records.items():
+            table.setItem(i, 0, QtWidgets.QTableWidgetItem(key))
+            table.setItem(i, 1, QtWidgets.QTableWidgetItem(value))
+            i += 1
+
     def __updatePatientRecords(self) -> None:
         logging.info("Refreshing patient records")
         self.patientRecordsTimer.setInterval(60000)  # Change interval to only check every minute (POC)
         records = self.api.get_verified_proof_records(self.api.get_connection_id(self.currentAlias))
-        # TODO: Make handling of all record types prettier and less hardcoded
         # TODO: Reformat the records so they are back in their original order
         if "NAW" in records:
-            header = self.nawTable.horizontalHeader()
-            header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
-            header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-            i = 0
-            self.nawTable.setRowCount(len(records["NAW"]))
-            for key, value in records["NAW"].items():
-                self.nawTable.setItem(i, 0, QtWidgets.QTableWidgetItem(key))
-                self.nawTable.setItem(i, 1, QtWidgets.QTableWidgetItem(value))
-                i += 1
+            self.__fillRecordTable(self.nawTable, records["NAW"])
 
     def __patientTabsEnabled(self, state: bool) -> None:
         for i in range(1, self.tabWidget.count()):
@@ -216,7 +219,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.__patientTabsEnabled(True)
         self.currentAlias = alias
         logging.info(f"Selected alias: {alias} with conn_id: {self.api.get_connection_id(self.currentAlias)}")
-        # TODO: Fill in all the available patient information in their corresponding tab
         self.patientRecordsTimer.start(1)  # Do the update instantly
 
     def onDeletePatientClicked(self) -> None:
