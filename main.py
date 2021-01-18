@@ -147,6 +147,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     @staticmethod
     def __fillRecordTable(table: QtWidgets.QTableWidget, records: dict):
+        # TODO: Reformat the records so they are back in their original order
         header = table.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
@@ -161,7 +162,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         logging.info("Refreshing patient records")
         self.patientRecordsTimer.setInterval(60000)  # Change interval to only check every minute (POC)
         records = self.api.get_verified_proof_records(self.api.get_connection_id(self.currentAlias))
-        # TODO: Reformat the records so they are back in their original order
+        # TODO: Add support for more record types here
         if "NAW" in records:
             self.__fillRecordTable(self.nawTable, records["NAW"])
 

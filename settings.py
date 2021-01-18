@@ -6,6 +6,11 @@ from library.api_handler import ApiHandler
 
 class Settings(QtWidgets.QDialog, Ui_SettingsDialog):
     def __init__(self, api_instance: ApiHandler, parent=None):
+        """
+        Settings dialog class constructor
+        :param api_instance: The ApiHandler instance
+        :param parent: Not used, can be left empty
+        """
         QtWidgets.QDialog.__init__(self, parent)
         self.setupUi(self)
         self.api = api_instance

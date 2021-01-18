@@ -2,17 +2,22 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from datetime import datetime
 from ui.pending_records import Ui_PendingRecordsDialog
 import logging
-import resource_rc
+import resource_rc  # Used for loading images
 
 from library.api_handler import ApiHandler
 
 
 class Records(QtWidgets.QDialog, Ui_PendingRecordsDialog):
     def __init__(self, api_instance: ApiHandler, parent=None):
+        """
+        Records dialog class constructor
+        :param api_instance: The ApiHandler instance
+        :param parent: Not used, can be left empty
+        """
         QtWidgets.QDialog.__init__(self, parent)
         self.setupUi(self)
         self.api = api_instance
-        # Resize section
+        # Resize headers section
         header = self.tableWidget.horizontalHeader()
         for i in range(3):
             header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
@@ -21,6 +26,7 @@ class Records(QtWidgets.QDialog, Ui_PendingRecordsDialog):
         # Load icon
         self.icon = QtGui.QIcon()
         self.icon.addPixmap(QtGui.QPixmap(":/images/img/check.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        # Fill the table widget with proof records
         self.__fillTable()
 
         # Set handler for refresh button
@@ -44,6 +50,7 @@ class Records(QtWidgets.QDialog, Ui_PendingRecordsDialog):
         [all_records.append(i) for i in self.api.get_proof_records(state="presentation_received")]
         [all_records.append(i) for i in self.api.get_proof_records(state="request_sent")]
         self.tableWidget.setRowCount(len(all_records))
+        print(all_records)
         # Fill the table with the received presentations first
         for i, item in enumerate(all_records):
             alias = self.api.get_alias_by_conn_id(conn_id=item["connection_id"])

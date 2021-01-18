@@ -2,13 +2,18 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from datetime import datetime
 from ui.pending_connections import Ui_PendingConnectionsDialog
 import logging
-import resource_rc
+import resource_rc  # Used for loading images
 
 from library.api_handler import ApiHandler
 
 
 class Connections(QtWidgets.QDialog, Ui_PendingConnectionsDialog):
     def __init__(self, api_instance: ApiHandler, parent=None):
+        """
+        Connections dialog class constructor
+        :param api_instance: The ApiHandler instance
+        :param parent: Not used, can be left empty
+        """
         QtWidgets.QDialog.__init__(self, parent)
         self.setupUi(self)
         self.api = api_instance
