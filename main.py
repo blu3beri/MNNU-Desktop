@@ -222,6 +222,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.selectPatientBox.count() == 1:
             self.__patientTabsEnabled(False)
 
+    #############################
+    #      Button handlers      #
+    #############################
+
     def onSettingsMenuClicked(self) -> None:
         """
         Handler for the Settings menu button
