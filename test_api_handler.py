@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     # Create a auto-accept invitation on the mobile ACA-PY
     desktop_conn_id, invitation = desktop.create_invitation(
-        alias="Mobile_conn",
+        alias="Test Gebruiker 123456789",
         multi_use=False,
         auto_accept=False
     )
