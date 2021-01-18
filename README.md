@@ -65,16 +65,16 @@ Desktop application for the MNNU care group made for healthcare providers.
 This section describes the basics in order to continue developing the Desktop application.
 Basic knowledge of QT Creator and Python is mandatory
 
-## IDE
+### IDE
 The IDE used for development is [PyCharm](https://www.jetbrains.com/pycharm/download). PyCharm will show all TODO comments inside the code in a structured manner. See the PyCharm [documentation](https://www.jetbrains.com/help/pycharm/using-todo.html) for more information.
 
-## Code documentation
+### Code documentation
 All `.py` files are documented using Python [docstrings](https://www.python.org/dev/peps/pep-0257/).
 
-## Naming convention
+### Naming convention
 Private & "helper" functions are prefixed with a double underscore example: `def __example():`.
 
-## Logging
+### Logging
 Every action caused by the user eq. button presses are being logged and written to a file `MNNU-Desktop.log` and the terminal.
 
 # Known bugs
