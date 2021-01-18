@@ -39,7 +39,6 @@ class Records(QtWidgets.QDialog, Ui_PendingRecordsDialog):
     def __verifyButtonHandler(self, presentation_exchange_id: str):
         logging.info("Clicked on removeButtonHandler")
         response = self.api.verify_presentation(presentation_exchange_id)
-        print(response)
         button = self.sender()
         if button:
             row = self.tableWidget.indexAt(button.pos()).row()
@@ -50,7 +49,6 @@ class Records(QtWidgets.QDialog, Ui_PendingRecordsDialog):
         [all_records.append(i) for i in self.api.get_proof_records(state="presentation_received")]
         [all_records.append(i) for i in self.api.get_proof_records(state="request_sent")]
         self.tableWidget.setRowCount(len(all_records))
-        print(all_records)
         # Fill the table with the received presentations first
         for i, item in enumerate(all_records):
             alias = self.api.get_alias_by_conn_id(conn_id=item["connection_id"])

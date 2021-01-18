@@ -10,6 +10,7 @@ Desktop application for the MNNU care group made for healthcare providers.
   * [IDE](#ide)
   * [Code documentation](#code-documentation)
   * [Naming convention](#naming-convention)
+  * [Logging](#logging)
 * [Known bugs](#known-bugs)
 
 # Installation & usage
@@ -72,6 +73,9 @@ All `.py` files are documented using Python [docstrings](https://www.python.org/
 
 ## Naming convention
 Private & "helper" functions are prefixed with a double underscore example: `def __example():`.
+
+## Logging
+Every action caused by the user eq. button presses are being logged and written to a file `MNNU-Desktop.log` and the terminal.
 
 # Known bugs
 No known bugs, please create an issue when finding any (with clear steps to reproduce).
