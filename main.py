@@ -27,6 +27,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Setup logger
         logging.basicConfig(filename="MNNU-Desktop.log", level=logging.INFO)
+        # Add handler to also log to the terminal
         logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
         logging.info("Logging started...")
 
@@ -92,9 +93,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.__createSchemas(self.schemas)
 
     def __del__(self):
+        """
+        MainWindow class destructor
+        :return: None
+        """
         self.tempDir.cleanup()
 
     def __createInviteQr(self, invite: str) -> str:
+        """
+        Generate a connection invite qr-code
+        :param invite: The Base64 encoded invite string
+        :return: The full path to the generated qr image
+        """
         qr = qrcode.QRCode(version=1, box_size=10, border=5)
         qr.add_data(invite)
         qr.make(fit=True)
@@ -105,6 +115,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return filename
 
     def __createSchemas(self, schemas: dict) -> None:
+        """
+        Create schemas and place them on the chain
+        :param schemas: The schema to create
+        :return: None
+        """
         for key, schema in schemas.items():
             exists = False
             for i in self.api.get_schemas():
@@ -118,6 +133,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         logging.info("All schemas are up-to-date and created!")
 
     def __showTime(self) -> None:
+        """
+        Show the time on the main page (Function is attached to a QTimer object)
+        :return: None
+        """
         time = QtCore.QTime.currentTime()
         if (time.second() % 2) == 0:
             self.lcdClock.display(time.toString("hh:mm"))
@@ -126,6 +145,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.clockTimer.setInterval(1000)  # Set the interval to update the time every second
 
     def __updateGreetings(self) -> None:
+        """
+        Show a greetings message on the main page (Function is attached to a QTimer object)
+        :return: None
+        """
         # Check if there is an valid connection and then get the agent name
         if self.api.test_connection():
             agent = self.api.get_agent_name().replace("_", " ")
@@ -146,7 +169,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.greetingsTimer.setInterval(60000)  # Set the interval to only check every minute
 
     @staticmethod
-    def __fillRecordTable(table: QtWidgets.QTableWidget, records: dict):
+    def __fillRecordTable(table: QtWidgets.QTableWidget, records: dict) -> None:
+        """
+        Fill the supplied table with the supplied records
+        :param table: The table to fill
+        :param records: The records to fill the table with
+        :return: None
+        """
         # TODO: Reformat the records so they are back in their original order
         header = table.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
@@ -159,6 +188,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             i += 1
 
     def __updatePatientRecords(self) -> None:
+        """
+        Update all patient record (tables)
+        :return: None
+        """
         logging.info("Refreshing patient records")
         self.patientRecordsTimer.setInterval(60000)  # Change interval to only check every minute (POC)
         records = self.api.get_verified_proof_records(self.api.get_connection_id(self.currentAlias))
@@ -167,10 +200,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.__fillRecordTable(self.nawTable, records["NAW"])
 
     def __patientTabsEnabled(self, state: bool) -> None:
+        """
+        Enable or disable the patient tabs
+        :param state: True (enabled), False (Disabled)
+        :return: None
+        """
         for i in range(1, self.tabWidget.count()):
             self.tabWidget.setTabEnabled(i, state)
 
     def __fillPatientSelectionBox(self, patients: list) -> None:
+        """
+        Fill the patient selection box with the given patient list
+        :param patients: The list of patients to fill the selection box with
+        :return: None
+        """
         patients = ["-- Selecteer patiënt --"] + sorted(patients, key=str.lower)
         self.selectPatientBox.clear()
         self.selectPatientBox.addItems(patients)
@@ -180,6 +223,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.__patientTabsEnabled(False)
 
     def onSettingsMenuClicked(self) -> None:
+        """
+        Handler for the Settings menu button
+        :return: None
+        """
         logging.info("Clicked settings menu")
         settings_dialog = Settings(self.api)
         settings_dialog.exec_()
@@ -192,20 +239,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # TODO: Save medical profession
 
     def onPendingConnectionsMenuClicked(self) -> None:
+        """
+        Handler for the pending connections button
+        :return: None
+        """
         logging.info("Clicked Pending Connections menu")
         connections_dialog = Connections(self.api)
         connections_dialog.exec()
 
     def onPendingRecordsMenuClicked(self) -> None:
+        """
+        Handler for the pending records button
+        :return: None
+        """
         logging.info("Clicked Pending Records menu")
         records_dialog = Records(self.api)
         records_dialog.exec()
 
     def onRefreshPatientClicked(self) -> None:
+        """
+        Handler for the refresh patient (list) button
+        :return: None
+        """
         logging.info("Clicked on refresh patient")
         self.__fillPatientSelectionBox(self.api.get_active_connection_aliases())
 
     def onSelectPatientClicked(self) -> None:
+        """
+        Handler for the select patient button
+        :return: None
+        """
         logging.info("Clicked on select patient")
         alias = self.selectPatientBox.currentText()
         if not alias or self.selectPatientBox.currentIndex() == 0:
@@ -223,10 +286,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.patientRecordsTimer.start(1)  # Do the update instantly
 
     def onDeletePatientClicked(self) -> None:
+        """
+        Handler for the delete patient button
+        :return: None
+        """
         logging.info("Clicked on delete patient")
         alias = self.selectPatientBox.currentText()
         if not alias or self.selectPatientBox.currentIndex() == 0:
             return
+        # Create a popup to ask for a confirmation
         action = QMessageBox.warning(self,
                                      'Verwijder connectie',
                                      f"Weet je zeker dat je de connnectie met {alias} wilt verwijderen?",
@@ -243,6 +311,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
 
     def onGenerateInviteClicked(self) -> None:
+        """
+        Handler for the generate invite button
+        :return: None
+        """
         logging.info("Clicked on generate invite")
         self.connLabel.setText("")  # Reset the conn label when button is pressed
         f_name = self.nameInput.text()
@@ -254,6 +326,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             logging.warning("First name and/or last name is empty")
             self.connLabel.setText("Voornaam en/of achternaam is leeg")
             return
+        # Check if the BSN is valid using a regular expression
         elif not re.match(r"^[0-9]{9}$", bsn):
             logging.warning("BSN is empty")
             self.connLabel.setText("BSN is leeg of klopt niet")
@@ -282,7 +355,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                "Staat de server aan en is de juiste ip/poort ingesteld?")
         logging.warning("Connection to ACA-PY failed, is the instance running and are the correct ip/port specified?")
 
-    def onSendRequestClicked(self):
+    def onSendRequestClicked(self) -> None:
+        """
+        Handler for the send request button (request patient record)
+        :return: None
+        """
         requested_record = self.recordTypeBox.currentText()
         reason = self.reasonText.toPlainText()
         if not requested_record or self.recordTypeBox.currentIndex() == 0:
