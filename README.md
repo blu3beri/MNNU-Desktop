@@ -10,6 +10,20 @@
     4. Compile settings.ui using: `pyuic5 settings.ui -o settings.py`
 4. execute main.py using: `python3 main.py`
 
+### Folder structure
+    .
+    ├── controller              # Controllers for ui dialogs
+    ├── helpers                 # Helper functions (utilities)
+    ├── img                     # Images used inside the QT UI
+    ├── library                 # Custom libraries (ApiHandler)
+    ├── schemas                 # Schema.py files
+    ├── tests                   # Tests for the ApiHandler class
+    ├── ui                      # QT .ui files
+    ├── main.py                 # Program entrypoint
+    ├── README.md
+    ├── requirements.txt        # Python module requirements
+    └── resource.qrc            # QT resource file
+
 ### CHECKLIST
 - [x] Revocation van een credential (gewoon weggehaald voor nu niet gefixed)
 - [x] Credential versturen naar de mobile agent

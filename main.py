@@ -8,11 +8,11 @@ import re
 import logging
 
 from ui.MainWindow import Ui_MainWindow
-from settings import Settings
-from connections import Connections
-from records import Records
+from controller.settings import Settings
+from controller.connections import Connections
+from controller.records import Records
 from library.api_handler import ApiHandler
-from credentials.schema_attributes import naw
+from schemas.naw import naw
 from helpers.requested_attribute_generator import generate_requested_attributes
 
 
