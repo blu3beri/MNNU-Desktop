@@ -310,6 +310,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 logging.warning("Unable to delete connection with given alias")
             # Refresh the active connection box list
             self.__fillPatientSelectionBox(self.api.get_active_connection_aliases())
+            # Disable updating of patient record tabs
+            self.patientRecordsTimer.stop()
         else:
             # User pressed No, do nothing
             return
