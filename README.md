@@ -17,7 +17,7 @@ Desktop application for the MNNU care group made for healthcare providers.
 1. Clone or download this repository and unpack the files.
    1. Open a terminal inside the `MNNU-Desktop` folder.
 2. Install the required Python modules using: `pip3 -r requirements.txt`
-3. Compile the resource file using: `pyrcc5 resources.qrc -o resource_rc.py`
+3. Compile the resource file using: `pyrcc5 resource.qrc -o resource_rc.py`
 4. Change directory to ui and compile the .ui files:
     1. Compile mainwindow.ui using: `pyuic5 mainwindow.ui -o MainWindow.py`
     2. Compile pending_connections.ui using: `pyuic5 pending_connections.ui -o pending_connections.py`
