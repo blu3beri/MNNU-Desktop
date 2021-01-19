@@ -56,7 +56,7 @@ Desktop application for the MNNU care group made for healthcare providers.
    - [x] Select profession of healthcare provider (**does nothing yet**).
    - [x] Setup ACA-Py server IP/Port (**not saved on application exit**).
    - [x] Button to test connection with ACA-Py server.
-- [ ] Creating and sending healthcare provider diagnostics to mobile app.
+- [ ] Creating and sending healthcare provider diagnostics to a patient.
 - [ ] Overwriting credentials (when updating existing credentials).
 - [ ] Credential revocation.
 - [ ] Secure the Admin Api.
