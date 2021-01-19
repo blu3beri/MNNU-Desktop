@@ -78,4 +78,5 @@ Private & "helper" functions are prefixed with a double underscore example: `def
 Every action caused by the user eq. button presses are being logged and written to a file `MNNU-Desktop.log` and the terminal.
 
 # Known bugs
-No known bugs, please create an issue when finding any (with clear steps to reproduce).
+- The applicaiton expects the ACA-PY instance to have a ALIAS containing a underscore inside its .env file eq. `ALIAS=Dhr_Janssen`.<br>
+Please create an issue when finding any other bugs not listed above (with clear steps to reproduce).
